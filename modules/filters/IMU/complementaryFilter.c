@@ -23,13 +23,12 @@ void ComplementaryFilterUpdate(
 	double az = accelData->z;
 
 	double pitchAccel =
-		atan2(ay, sqrt(ax*ax + az*az)) * 57.296;
+		atan2(ay, sqrt(ax*ax + az*az));
 
 	double rollAccel =
-		atan2(ax, sqrt(ay*ay + az*az)) * 57.296;
+		atan2(ax, sqrt(ay*ay + az*az));
 
 	//printf("IMU %f %f ROLL %f %f %f %f %f\n", cf->roll, cf->pitch, ax, ay, az, rollAccel, pitchAccel);
-
 
 	// Combine gyroscope and accelerometer data.
 	cf->pitch = cf->pitch * cf->alpha + pitchAccel * (1 - cf->alpha);

@@ -1,7 +1,7 @@
 #ifndef __MS56XX_H__
 #define __MS56XX_H__
 
-#include "i2cDevice.h"
+#include "peripherals/i2cDevice.h"
 
 struct MS5611
 {

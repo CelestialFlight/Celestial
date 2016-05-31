@@ -1,8 +1,9 @@
 #ifndef __MPU_6500_H__
 #define __MPU_6500_H__
 
-#include "i2cDevice.h"
-#include "vector3d.h"
+#include <stdint.h>
+#include "common/vector3d.h"
+#include "peripherals/i2cDevice.h"
 
 struct MPU6500
 {
