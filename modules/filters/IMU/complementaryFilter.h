@@ -7,7 +7,7 @@
 struct ComplementaryFilter
 {
 	// Filter outputs in degrees.
-	double roll, pitch;
+	double angle;
 
 	// Constant that values the gyroscope over the accelerometer.
 	double alpha;
@@ -18,8 +18,8 @@ void ComplementaryFilterInit(
 
 void ComplementaryFilterUpdate(
 	struct ComplementaryFilter* cf,
-	struct Vector3D* accelData,
-	struct Vector3D* gyroData,
+	double angle,
+	double rate,
 	double dT);
 
 #endif

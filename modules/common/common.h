@@ -3,9 +3,8 @@
 
 #include <stdint.h>
 
-// TODO: Why was this ever put here???
-//[[combinable]]
-//void SystemTimeTask(void);
+#define RADTODEG 57.2957795131
+#define DEGTORAD 0.01745329251
 
 // Returns the current system time in usec.
 uint64_t SystemTime(void);
@@ -15,5 +14,6 @@ void SystemWait(uint64_t usec);
 
 // Waits until the system time reaches a given value.
 void SystemWaitUntil(uint64_t waittime);
+
 
 #endif

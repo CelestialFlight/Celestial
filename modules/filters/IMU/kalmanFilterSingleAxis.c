@@ -33,6 +33,7 @@ void KalmanFilterSingleAxisUpdate(
 	kf->P[1][0] -= dT * kf->P[1][1];
 	kf->P[1][1] += kf->Q[1][1] * dT;
 
+	// Update
 	// Difference between the measured value and the state
 	double y = angle - kf->state[0];
 
