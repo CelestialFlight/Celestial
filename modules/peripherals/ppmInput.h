@@ -21,6 +21,13 @@ struct PPMInput
 
     // Keeps track how many signals are being dropped (hopefully 0!)
     uint32_t _corruptDataCounter;
+
+    // Pointer to a datastructure that contains information concerning
+    // the pin being used.  This will be different for every processor.
+    void* pinData;
 };
+
+int PPMInputInit(struct PPMInput* ppm, void* pinData);
+int PPMInputUpdate(struct PPMInput* ppm);
 
 #endif
