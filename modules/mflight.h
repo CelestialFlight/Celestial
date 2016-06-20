@@ -15,5 +15,8 @@
 #include "peripherals/pwmOutput.h"
 
 // Sensors
-#include "sensors/MPU/MPU6500.h"
-#include "sensors/MS56xx/MS56xx.h"
+#include "sensors/barometer/MS56xx/MS56xx.h"
+#include "sensors/barometer/BMP280/BMP280.h"
+#include "sensors/imu/MPU/MPU6500.h"
+#include "sensors/magnetometer/LSM303/LSM303.h"
+#include "sensors/magnetometer/MAG3110/MAG3110.h"
