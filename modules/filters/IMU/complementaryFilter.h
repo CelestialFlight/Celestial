@@ -1,7 +1,7 @@
 #ifndef __COMPLEMENTARY_FILTER_H__
 #define __COMPLEMENTARY_FILTER_H__
 
-#include "common/vector3d.h"
+#include "common/vector.h"
 #include <math.h>
 
 struct ComplementaryFilter

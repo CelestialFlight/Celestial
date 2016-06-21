@@ -7,11 +7,15 @@ int MPU6500Init(struct MPU6500* mpu, void* pinData)
     if (mpu == 0) return SENSOR_NULL_POINTER;
     if (pinData == 0) return SENSOR_NULL_POINTER;
 
-    // Max angular rate: 250 deg/sec
-    mpu->gyroScale = 250;
+    // Max angular rate: 250 deg/sec (4.36332 rad/sec)
+    mpu->gyroScale = 250 * 0.0174533;
 
     // Max acceleration: 2 g's.
     mpu->accelScale = 2;
+
+    // Set default biases
+    MPU6500SetAccelBias(mpu, 0, 0, 0);
+    MPU6500SetGyroBias(mpu, 0, 0, 0);
 
     // Initalize the I2C pins.
     I2CDeviceInit(&mpu->i2c, 0x68, 100000, pinData);
@@ -49,6 +53,22 @@ int MPU6500Enable(struct MPU6500* mpu)
     return 0;
 }
 
+void MPU6500SetAccelBias(struct MPU6500* mpu,
+    double xBias, double yBias, double zBias)
+{
+    mpu->accelBias.x = xBias;
+    mpu->accelBias.y = yBias;
+    mpu->accelBias.z = zBias;
+}
+
+void MPU6500SetGyroBias(struct MPU6500* mpu,
+    double xBias, double yBias, double zBias)
+{
+    mpu->gyroBias.x = xBias;
+    mpu->gyroBias.y = yBias;
+    mpu->gyroBias.z = zBias;
+}
+
 int MPU6500Sample(struct MPU6500* mpu)
 {
     // Sample Accelerometer
@@ -72,15 +92,15 @@ int MPU6500Sample(struct MPU6500* mpu)
 
     // Converts the raw data to g's
     double accelConversion = mpu->accelScale / 32767.0;
-    mpu->accelData.x = rawAccelData[0] * accelConversion;
-    mpu->accelData.y = rawAccelData[1] * accelConversion;
-    mpu->accelData.z = rawAccelData[2] * accelConversion;
+    mpu->accelData.x = rawAccelData[0] * accelConversion - mpu->accelBias.x;
+    mpu->accelData.y = rawAccelData[1] * accelConversion - mpu->accelBias.y;
+    mpu->accelData.z = rawAccelData[2] * accelConversion - mpu->accelBias.z;
 
-    // Converts the raw data to deg/sec
+    // Converts the raw data to rad/sec
     double gyroConversion = mpu->gyroScale / 32767.0;
-    mpu->gyroData.x = rawGyroData[0] * gyroConversion;
-    mpu->gyroData.y = rawGyroData[1] * gyroConversion;
-    mpu->gyroData.z = rawGyroData[2] * gyroConversion;
+    mpu->gyroData.x = rawGyroData[0] * gyroConversion - mpu->gyroBias.x;
+    mpu->gyroData.y = rawGyroData[1] * gyroConversion - mpu->gyroBias.y;
+    mpu->gyroData.z = rawGyroData[2] * gyroConversion - mpu->gyroBias.z;
 
     return 0;
 }

@@ -3,7 +3,7 @@
 
 // Math.h for cos and sin functions.
 #include <math.h>
-#include "vector3d.h"
+#include "vector.h"
 
 struct Quaternion
 {

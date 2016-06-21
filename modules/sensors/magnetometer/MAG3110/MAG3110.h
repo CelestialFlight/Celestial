@@ -1,7 +1,7 @@
 #ifndef __MAG_3110_H__
 #define __MAG_3110_H__
 
-#include "common/vector3d.h"
+#include "common/vector.h"
 #include "peripherals/i2cDevice.h"
 #include "sensors/sensors.h"
 

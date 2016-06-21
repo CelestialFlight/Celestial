@@ -9,6 +9,11 @@
 struct PPMInput
 {
     uint16_t channels[MAX_CHANNELS];
+
+    // This is subtracted from the input signal value so that if
+    // the "zero" value is offset from exactly 1500, it can be
+    // calibrated easily.  By default, all zero.
+    uint16_t channelsBias[MAX_CHANNELS];
     uint16_t updateCount;
 
     uint32_t _edgeTimes[MAX_CHANNELS*2];
@@ -28,6 +33,8 @@ struct PPMInput
 };
 
 int PPMInputInit(struct PPMInput* ppm, void* pinData);
+void PPMInputSetBias(struct PPMInput* ppm, int channel, uint16_t bias);
 int PPMInputUpdate(struct PPMInput* ppm);
+int32_t PPMInputGetValue(struct PPMInput* ppm, int channel);
 
 #endif

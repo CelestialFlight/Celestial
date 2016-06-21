@@ -1,9 +1,10 @@
 // Common
 #include "common/common.h"
-#include "common/vector3d.h"
+#include "common/vector.h"
 #include "common/quaternion.h"
 #include "common/serialBuffer.h"
 #include "common/uartOutput.h"
+#include "common/mixer.h"
 
 // Feedback
 #include "feedback/PIDBasic.h"

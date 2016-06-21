@@ -2,7 +2,7 @@
 #define __MPU_6500_H__
 
 #include <stdint.h>
-#include "common/vector3d.h"
+#include "common/vector.h"
 #include "peripherals/i2cDevice.h"
 #include "sensors/sensors.h"
 
@@ -12,13 +12,18 @@ struct MPU6500
 	struct Vector3D gyroData;
 	struct Vector3D accelData;
 
+	// Biases that are subtracted from the sensor data.
+	// By default, these are 0.
+	struct Vector3D gyroBias;
+	struct Vector3D accelBias;
+
     // Highest rotational velocity that be detected.
     // Can be: 250, 500, 1000, 2000 deg/sec.
-    uint16_t gyroScale;
+    double gyroScale;
 
     // Highest acceleration that can be detected.
     // Can be 2, 4, 8, or 16g's
-    uint16_t accelScale;
+    double accelScale;
 
     // Increments everytime a new piece of data is saved.
     uint32_t updateCount;
@@ -39,6 +44,14 @@ int MPU6500Enable(struct MPU6500* mpu);
 
 // Samples the sensor for data.
 int MPU6500Sample(struct MPU6500* mpu);
+
+// Accelerometer Bias
+void MPU6500SetAccelBias(struct MPU6500* mpu,
+    double xBias, double yBias, double zBias);
+
+// Gyroscope Bias
+void MPU6500SetGyroBias(struct MPU6500* mpu,
+    double xBias, double yBias, double zBias);
 
 // Gyroscope Offset Registers
 #define XG_OFFSET_H 0x13
