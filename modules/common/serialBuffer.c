@@ -1,23 +1,26 @@
 #include "serialBuffer.h"
 
-void SerialBufferInit(struct SerialBuffer* buf)
+void SerialBufferInit(volatile struct SerialBuffer* buf)
 {
 	buf->end = 0;
 	buf->start = 0;
 	buf->sendChar = 0;
+	buf->sendPrintf = 0;
+	buf->forceSend = 0;
+	buf->lock = 0;
 }
 
-int SerialBufferIsEmpty(struct SerialBuffer* buf)
+int SerialBufferIsEmpty(volatile struct SerialBuffer* buf)
 {
 	return buf->start == buf->end ? 1 : 0;
 }
 
-int SerialBufferIsFull(struct SerialBuffer* buf)
+int SerialBufferIsFull(volatile struct SerialBuffer* buf)
 {
 	return (buf->end+1) % _SB_BUFFER_SIZE == buf->start ? 1 : 0;
 }
 
-int SerialBufferSize(struct SerialBuffer* buf)
+int SerialBufferSize(volatile struct SerialBuffer* buf)
 {
 	// If the end index hasn't overflowed from max to 0
 	if (buf->end >= buf->start)
@@ -28,9 +31,13 @@ int SerialBufferSize(struct SerialBuffer* buf)
 		return _SB_BUFFER_SIZE - buf->start + buf->end;
 }
 
-int SerialBufferPush(struct SerialBuffer* buf, uint8_t value)
+int SerialBufferPush(volatile struct SerialBuffer* buf, uint8_t value)
 {
 	if (SerialBufferIsFull(buf)) return 0;
+
+	// Lock writing to buffer so that there aren't any race issues.
+    while (buf->lock == 1);
+    buf->lock = 1;
 
 	buf->buffer[buf->end] = value;
 	buf->end++;
@@ -39,33 +46,41 @@ int SerialBufferPush(struct SerialBuffer* buf, uint8_t value)
 
 	if (buf->sendChar != 0)
 	{
-	    void (*callback)(struct SerialBuffer*) = buf->sendChar;
+	    void (*callback)(volatile struct SerialBuffer*) = buf->sendChar;
 	    callback(buf);
 	}
+
+	// Allow other threads to use serial buffer now.
+	buf->lock = 0;
 
 	return 1;
 }
 
-int16_t SerialBufferPop(struct SerialBuffer* buf)
+int16_t SerialBufferPop(volatile struct SerialBuffer* buf)
 {
 	if (SerialBufferIsEmpty(buf)) return -1;
+
+	// Lock writing to buffer so that there aren't any race issues.
+	while (buf->lock == 1);
+	buf->lock = 0;
 
 	char returnResult = buf->buffer[buf->start];
 	buf->start++;
 
 	if (buf->start >= _SB_BUFFER_SIZE) buf->start = 0;
 
+	buf->lock = 0;
 	return returnResult;
 }
 
-int SerialBufferPeek(struct SerialBuffer* buf, uint16_t amount)
+int SerialBufferPeek(volatile struct SerialBuffer* buf, uint16_t amount)
 {
 	if (SerialBufferIsEmpty(buf)) return -1;
 
 	return buf->buffer[(buf->start+amount) % _SB_BUFFER_SIZE];
 }
 
-int SerialBufferCopy(struct SerialBuffer* buf, char* data, uint16_t amount)
+int SerialBufferCopy(volatile struct SerialBuffer* buf, char* data, uint16_t amount)
 {
 	if (amount <= 0) amount = SerialBufferSize(buf);
 
@@ -77,18 +92,18 @@ int SerialBufferCopy(struct SerialBuffer* buf, char* data, uint16_t amount)
 	return 1;
 }
 
-void SerialBufferReset(struct SerialBuffer* buf)
+void SerialBufferReset(volatile struct SerialBuffer* buf)
 {
 	buf->start = 0;
 	buf->end = 0;
 }
 
-int SerialBufferSaveChar(struct SerialBuffer* buf, char c)
+int SerialBufferSaveChar(volatile struct SerialBuffer* buf, char c)
 {
     return SerialBufferPush(buf, c);
 }
 
-int SerialBufferSaveString(struct SerialBuffer* buf, char* c)
+int SerialBufferSaveString(volatile struct SerialBuffer* buf, char* c)
 {
     while (*c != 0)
     {
@@ -99,7 +114,7 @@ int SerialBufferSaveString(struct SerialBuffer* buf, char* c)
     return 0;
 }
 
-int SerialBufferSaveInt(struct SerialBuffer* buf, int n)
+int SerialBufferSaveInt(volatile struct SerialBuffer* buf, int n)
 {
     char value[30];
     int index = 0;
@@ -132,7 +147,7 @@ int SerialBufferSaveInt(struct SerialBuffer* buf, int n)
     return 0;
 }
 
-int SerialBufferSaveDouble(struct SerialBuffer* buf, double n)
+int SerialBufferSaveDouble(volatile struct SerialBuffer* buf, double n)
 {
     char value[30];
     int index = 0;
@@ -181,7 +196,7 @@ int SerialBufferSaveDouble(struct SerialBuffer* buf, double n)
     return 0;
 }
 
-int SerialBufferPrintfVargs(struct SerialBuffer* buf, char* s, va_list ap)
+int SerialBufferPrintfVargs(volatile struct SerialBuffer* buf, char* s, va_list ap)
 {
     while (*s != 0)
     {
@@ -213,13 +228,41 @@ int SerialBufferPrintfVargs(struct SerialBuffer* buf, char* s, va_list ap)
 
        s++;
     }
+
+    // Callback for after a printf statement is used.
+    if (buf->sendPrintf != 0)
+    {
+        void (*callback)(volatile struct SerialBuffer*) = buf->sendPrintf;
+        callback(buf);
+    }
+
     return 0;
 }
 
-int SerialBufferPrintf(struct SerialBuffer* buf, char* s, ...)
+int SerialBufferPrintf(volatile struct SerialBuffer* buf, char* s, ...)
 {
     va_list ap;
     va_start(ap, s);
     return SerialBufferPrintfVargs(buf, s, ap);
     va_end(ap);
+}
+
+void SerialBufferSetPrintfCallback(volatile struct SerialBuffer* buf, void* cb)
+{
+    buf->sendPrintf = cb;
+}
+
+void* SerialBufferGetPrintfCallback(volatile struct SerialBuffer* buf)
+{
+    return buf->sendPrintf;
+}
+
+void SerialBufferSetForceSendCallback(volatile struct SerialBuffer* buf, void* cb)
+{
+    buf->forceSend = cb;
+}
+
+void* SerialBufferGetForceSendCallback(volatile struct SerialBuffer* buf)
+{
+    return buf->forceSend;
 }

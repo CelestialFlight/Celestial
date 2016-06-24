@@ -31,6 +31,10 @@ int MAG3110Sample(struct MAG3110* mag)
     int16_t zData = ((int16_t)data[4] << 8) | data[5];
 
     // TODO: Convert data to uT
+    mag->magData.x = xData;
+    mag->magData.y = yData;
+    mag->magData.z = zData;
+
     return 0;
 }
 

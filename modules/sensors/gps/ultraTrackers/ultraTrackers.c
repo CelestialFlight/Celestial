@@ -18,7 +18,7 @@ void UltraTrackersSetOutput(struct UltraTrackers* ut,
 
 // Helper functions.
 static int _findStartOfSignal(uint8_t* buffer, int bufSize);
-static int _getPulseWidth(uint8_t* buffer, int pulseStart, int bufSize);
+//static int _getPulseWidth(uint8_t* buffer, int pulseStart, int bufSize);
 
 // This should be updated at exactly 1us (or whichever sampling
 // rate is desired)
@@ -100,9 +100,9 @@ int UltraTrackersUpdate(struct UltraTrackers* ut,
             int time1 = _findStartOfSignal(ut->buffer1, _UT_BUFFER_SIZE);
             int time2 = _findStartOfSignal(ut->buffer2, _UT_BUFFER_SIZE);
             int time3 = _findStartOfSignal(ut->buffer3, _UT_BUFFER_SIZE);
-            int pWidth1 = _getPulseWidth(ut->buffer1, time1, _UT_BUFFER_SIZE);
-            int pWidth2 = _getPulseWidth(ut->buffer2, time2, _UT_BUFFER_SIZE);
-            int pWidth3 = _getPulseWidth(ut->buffer3, time3, _UT_BUFFER_SIZE);
+            //int pWidth1 = _getPulseWidth(ut->buffer1, time1, _UT_BUFFER_SIZE);
+            //int pWidth2 = _getPulseWidth(ut->buffer2, time2, _UT_BUFFER_SIZE);
+            //int pWidth3 = _getPulseWidth(ut->buffer3, time3, _UT_BUFFER_SIZE);
             //_filterResults(&time1, &time2, &time3, pWidth1, pWidth2, pWidth3);
 
 
@@ -197,7 +197,7 @@ static int _findStartOfSignal(uint8_t* buffer, int bufSize)
     return -1;
 }
 
-static int _getPulseWidth(uint8_t* buffer, int pulseStart, int bufSize)
+/*static int _getPulseWidth(uint8_t* buffer, int pulseStart, int bufSize)
 {
     int count = 0;
     int i;
@@ -209,4 +209,4 @@ static int _getPulseWidth(uint8_t* buffer, int pulseStart, int bufSize)
     }
 
     return count;
-}
+}*/
