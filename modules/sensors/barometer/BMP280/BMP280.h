@@ -14,6 +14,7 @@ struct BMP280Calibration
     int16_t dig_P2, dig_P3, dig_P4, dig_P5, dig_P6, dig_P7, dig_P8, dig_P9;
 };
 
+// Driver for the BMP280 barometer.
 struct BMP280
 {
     struct I2CDevice i2c;
@@ -29,9 +30,16 @@ struct BMP280
     struct BMP280Calibration calib;
 };
 
+// Initialize the BMP280 and test that it can be connected to.
+// void* pinData is a platform dependent structure for defining
+// the i2c pins.
 int BMP280Init(struct BMP280* bar, void* pinData);
-int BMP280Sample(struct BMP280* bar);
+
+// Enable any registers necessary for getting the BMP280 running.
 int BMP280Enable(struct BMP280* bar);
+
+// Sample the BMP280 for data and compute the measure pressures.
+int BMP280Sample(struct BMP280* bar);
 
 // Helper functions
 int BMP280SetCtrl_MeasReg(

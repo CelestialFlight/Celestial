@@ -11,6 +11,7 @@ struct Vector3D
 	double x, y, z;
 };
 
+// Represents a four dimensional object.
 struct Vector4D
 {
 	double w, x, y, z;

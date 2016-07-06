@@ -93,6 +93,10 @@ int SerialBufferCopy(volatile struct SerialBuffer* buf, char* data, uint16_t amo
 	if (amount <= 0) amount = SerialBufferSize(buf);
 
 	int i;
+<<<<<<< HEAD
+=======
+
+>>>>>>> 05c98794aecc6bedb455e0a0925518d2a366d02c
 	for (i = 0; i < amount; i++)
 	{
 		data[i] = SerialBufferPeek(buf, i);
