@@ -32,7 +32,7 @@ struct RawIRTachometer
 int RawIRTachometerInit(struct RawIRTachometer* tach);
 
 // Update the RPM calculation when a new signal comes.
-int RawIRTachometerUpdate(struct RawIRTachometer* tach);
+int RawIRTachometerUpdate(struct RawIRTachometer* tach, uint64_t curTime);
 
 // Returns the current RPM of the tachometer.
 double RawIRTachometerGetRPM(struct RawIRTachometer* tach);

@@ -31,9 +31,14 @@ int SerialBufferSize(volatile struct SerialBuffer* buf)
 		return _SB_BUFFER_SIZE - buf->start + buf->end;
 }
 
+int SerialBufferMaxCapacity(volatile struct SerialBuffer* buf)
+{
+    return _SB_BUFFER_SIZE;
+}
+
 int SerialBufferPush(volatile struct SerialBuffer* buf, uint8_t value)
 {
-	if (SerialBufferIsFull(buf)) return 0;
+	if (SerialBufferIsFull(buf)) return 1;
 
 	// Lock writing to buffer so that there aren't any race issues.
     while (buf->lock == 1);
@@ -53,7 +58,7 @@ int SerialBufferPush(volatile struct SerialBuffer* buf, uint8_t value)
 	// Allow other threads to use serial buffer now.
 	buf->lock = 0;
 
-	return 1;
+	return 0;
 }
 
 int16_t SerialBufferPop(volatile struct SerialBuffer* buf)
@@ -84,7 +89,9 @@ int SerialBufferCopy(volatile struct SerialBuffer* buf, char* data, uint16_t amo
 {
 	if (amount <= 0) amount = SerialBufferSize(buf);
 
-	for (int i = 0; i < amount; i++)
+	int i;
+
+	for (i = 0; i < amount; i++)
 	{
 		data[i] = SerialBufferPeek(buf, i);
 	}
@@ -265,4 +272,14 @@ void SerialBufferSetForceSendCallback(volatile struct SerialBuffer* buf, void* c
 void* SerialBufferGetForceSendCallback(volatile struct SerialBuffer* buf)
 {
     return buf->forceSend;
+}
+
+void SerialBufferSetSendCharCallback(volatile struct SerialBuffer* buf, void* cb)
+{
+    buf->sendChar = cb;
+}
+
+void* SerialBufferGetSendCharCallback(volatile struct SerialBuffer* buf)
+{
+    return buf->sendChar;
 }

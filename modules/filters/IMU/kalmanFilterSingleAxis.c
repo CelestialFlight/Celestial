@@ -1,6 +1,5 @@
 #include "kalmanFilterSingleAxis.h"
 
-// Takes in an input
 void KalmanFilterSingleAxisInit(
 	struct KalmanFilterSingleAxis* kf, double Q_angle, double Q_gyro, double R_measure)
 {

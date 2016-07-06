@@ -45,7 +45,7 @@ int DataLoggerForceSave(volatile struct DataLogger* dl)
 
     if (cb != 0)
     {
-        void (*callback)(struct SerialBuffer*) = dl->buf->forceSend;
+        void (*callback)(volatile struct SerialBuffer*) = dl->buf->forceSend;
         callback(dl->buf);
     }
 
