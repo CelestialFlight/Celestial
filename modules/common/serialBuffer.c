@@ -44,14 +44,17 @@ int SerialBufferPush(volatile struct SerialBuffer* buf, uint8_t value)
 
 	if (buf->end >= _SB_BUFFER_SIZE) buf->end = 0;
 
+	// Allow other threads to use serial buffer now.
+	// NOTE: A deadlock can occur if the lock is reset after
+	//       sendChar callback as that callback is likely
+	//       to call push/pop and require the lock.
+	buf->lock = 0;
+
 	if (buf->sendChar != 0)
 	{
 	    void (*callback)(volatile struct SerialBuffer*) = buf->sendChar;
 	    callback(buf);
 	}
-
-	// Allow other threads to use serial buffer now.
-	buf->lock = 0;
 
 	return 1;
 }
@@ -84,7 +87,8 @@ int SerialBufferCopy(volatile struct SerialBuffer* buf, char* data, uint16_t amo
 {
 	if (amount <= 0) amount = SerialBufferSize(buf);
 
-	for (int i = 0; i < amount; i++)
+	int i;
+	for (i = 0; i < amount; i++)
 	{
 		data[i] = SerialBufferPeek(buf, i);
 	}

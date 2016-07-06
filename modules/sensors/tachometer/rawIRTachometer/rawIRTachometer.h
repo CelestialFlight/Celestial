@@ -37,5 +37,4 @@ int RawIRTachometerUpdate(struct RawIRTachometer* tach);
 // Returns the current RPM of the tachometer.
 double RawIRTachometerGetRPM(struct RawIRTachometer* tach);
 
-
 #endif

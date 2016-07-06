@@ -1,8 +1,8 @@
 #ifndef __SD_CARD_H__
 #define __SD_CARD_H__
 
-#include "serialBuffer.h"
-#include "ff.h"
+#include "common/serialBuffer.h"
+#include "peripherals/fatfs/ff.h"
 #include <stdint.h>
 
 struct SDCard

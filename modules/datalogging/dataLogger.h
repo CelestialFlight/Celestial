@@ -1,7 +1,7 @@
 #ifndef __DATA_LOGGER_H__
 #define __DATA_LOGGER_H__
 
-#include "serialBuffer.h"
+#include "common/serialBuffer.h"
 
 struct DataLogger
 {
