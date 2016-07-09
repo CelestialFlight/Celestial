@@ -1,6 +1,6 @@
 #include "serialBuffer.h"
 
-void SerialBufferInit(volatile struct SerialBuffer* buf)
+void SerialBufferInit(volatile struct SerialBuffer* buf, int bufferSize)
 {
 	buf->end = 0;
 	buf->start = 0;
@@ -8,6 +8,14 @@ void SerialBufferInit(volatile struct SerialBuffer* buf)
 	buf->sendPrintf = 0;
 	buf->forceSend = 0;
 	buf->lock = 0;
+	buf->bufferSize = bufferSize;
+	buf->buffer = (uint8_t*)malloc(sizeof(uint8_t)*bufferSize);
+}
+
+void SerialBufferDeInit(volatile struct SerialBuffer* buf)
+{
+    buf->bufferSize = 0;
+    free(buf->buffer);
 }
 
 int SerialBufferIsEmpty(volatile struct SerialBuffer* buf)
@@ -17,7 +25,7 @@ int SerialBufferIsEmpty(volatile struct SerialBuffer* buf)
 
 int SerialBufferIsFull(volatile struct SerialBuffer* buf)
 {
-	return (buf->end+1) % _SB_BUFFER_SIZE == buf->start ? 1 : 0;
+	return (buf->end+1) % buf->bufferSize == buf->start ? 1 : 0;
 }
 
 int SerialBufferSize(volatile struct SerialBuffer* buf)
@@ -28,12 +36,12 @@ int SerialBufferSize(volatile struct SerialBuffer* buf)
 
 	// If the end index is less then the start index
 	else
-		return _SB_BUFFER_SIZE - buf->start + buf->end;
+		return buf->bufferSize - buf->start + buf->end;
 }
 
 int SerialBufferMaxCapacity(volatile struct SerialBuffer* buf)
 {
-    return _SB_BUFFER_SIZE;
+    return buf->bufferSize;
 }
 
 int SerialBufferPush(volatile struct SerialBuffer* buf, uint8_t value)
@@ -47,7 +55,7 @@ int SerialBufferPush(volatile struct SerialBuffer* buf, uint8_t value)
 	buf->buffer[buf->end] = value;
 	buf->end++;
 
-	if (buf->end >= _SB_BUFFER_SIZE) buf->end = 0;
+	if (buf->end >= buf->bufferSize) buf->end = 0;
 
 	// Allow other threads to use serial buffer now.
 	// NOTE: A deadlock can occur if the lock is reset after
@@ -75,7 +83,7 @@ int16_t SerialBufferPop(volatile struct SerialBuffer* buf)
 	char returnResult = buf->buffer[buf->start];
 	buf->start++;
 
-	if (buf->start >= _SB_BUFFER_SIZE) buf->start = 0;
+	if (buf->start >= buf->bufferSize) buf->start = 0;
 
 	buf->lock = 0;
 	return returnResult;
@@ -85,7 +93,7 @@ int SerialBufferPeek(volatile struct SerialBuffer* buf, uint16_t amount)
 {
 	if (SerialBufferIsEmpty(buf)) return -1;
 
-	return buf->buffer[(buf->start+amount) % _SB_BUFFER_SIZE];
+	return buf->buffer[(buf->start+amount) % buf->bufferSize];
 }
 
 int SerialBufferCopy(volatile struct SerialBuffer* buf, char* data, uint16_t amount)

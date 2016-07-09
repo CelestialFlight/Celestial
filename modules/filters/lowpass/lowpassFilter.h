@@ -1,7 +1,7 @@
 #ifndef __LOW_PASS_FILTER_H__
 #define __LOW_PASS_FILTER_H__
 
-#define BUFFER_SIZE 1
+#define BUFFER_SIZE 5
 
 struct LowPassFilter
 {

@@ -4,8 +4,13 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <stdarg.h>
+#include <stdlib.h>
 
-#define _SB_BUFFER_SIZE 2048
+// Error messages.
+#define SB_ERROR_NULL_POINTER  -1
+#define SB_NO_ERROR             0
+#define SB_FULL_BUFFER          1
+#define SB_EMPTY_BUFFER         2
 
 // A SerialBuffer is a core datastructure in mflight which is
 // implemented as a circular buffer.  It is used for saving a stream
@@ -16,7 +21,8 @@
 // being used, and if not, activate it to send the data.
 struct SerialBuffer
 {
-	uint8_t buffer[_SB_BUFFER_SIZE];
+	uint8_t* buffer;
+	uint32_t bufferSize;
 
 	// Points to the start and the end of the circular buffer.
 	uint16_t start;
@@ -47,7 +53,7 @@ struct SerialBuffer
 };
 
 // Initializes the serial buffer to it's default state.
-void SerialBufferInit(volatile struct SerialBuffer* buf);
+void SerialBufferInit(volatile struct SerialBuffer* buf, int size);
 
 // Returns 1 if the buffer contains no data.
 int SerialBufferIsEmpty(volatile struct SerialBuffer* buf);
