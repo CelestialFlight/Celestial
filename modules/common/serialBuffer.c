@@ -8,8 +8,11 @@ void SerialBufferInit(volatile struct SerialBuffer* buf, int bufferSize)
 	buf->sendPrintf = 0;
 	buf->forceSend = 0;
 	buf->lock = 0;
-	buf->bufferSize = bufferSize;
-	buf->buffer = (uint8_t*)malloc(sizeof(uint8_t)*bufferSize);
+
+	// Initiate memory for the buffer. Add one extra space which is used for
+	// determining when the buffer is full.
+	buf->bufferSize = (bufferSize+1);
+	buf->buffer = (uint8_t*)malloc(sizeof(uint8_t)*(bufferSize+1));
 }
 
 void SerialBufferDeInit(volatile struct SerialBuffer* buf)
@@ -41,7 +44,7 @@ int SerialBufferSize(volatile struct SerialBuffer* buf)
 
 int SerialBufferMaxCapacity(volatile struct SerialBuffer* buf)
 {
-    return buf->bufferSize;
+    return buf->bufferSize - 1;
 }
 
 int SerialBufferPush(volatile struct SerialBuffer* buf, uint8_t value)
@@ -254,6 +257,15 @@ int SerialBufferPrintfVargs(volatile struct SerialBuffer* buf, char* s, va_list 
     }
 
     return 0;
+}
+
+void SerialBufferForceSend(volatile struct SerialBuffer* buf)
+{
+    if (buf->forceSend != 0)
+    {
+        void (*callback)(volatile struct SerialBuffer*) = buf->forceSend;
+        callback(buf);
+    }
 }
 
 int SerialBufferPrintf(volatile struct SerialBuffer* buf, char* s, ...)

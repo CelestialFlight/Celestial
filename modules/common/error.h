@@ -13,9 +13,9 @@ struct SerialBuffer* GetErrorOutput(void);
             __FILE__, __FUNCTION__, __LINE__);
 
 #define warning(x) \
-    if (x == 0 && GetErrorOutput() != 0) \
+    if (x == 0 && GetErrorOutput() != 0){ \
         SerialBufferPrintf( \
             GetErrorOutput(), "WARNING in %s func:%s line:%d", \
-            __FILE__, __FUNCTION__, __LINE__);
+            __FILE__, __FUNCTION__, __LINE__); }
 
 #endif

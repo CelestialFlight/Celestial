@@ -23,6 +23,9 @@ struct SDCardFatFSFile
 
     // This should be set to the index of the files[
     int fileID;
+
+    // Time in usec since last update.
+    uint64_t lastUpdate;
 };
 
 struct SDCard
@@ -60,11 +63,11 @@ int SDCardPrintf(struct SDCard* card, int fileNum, char* c, ...);
 // When this is called after a SDCardWrite, it essentially tells the SD card
 // to "halt" until another write occurs. This reduces critical sections to
 // the time between the SDCardWrite call starts and the SDCardSync call ends.
-int SDCardSync(struct SDCard* card, int fileNum);
+int SDCardSync(struct SDCardFatFSFile* card);
 
 // Writes a set of bytes to the sd card. Buf is the array of bytes to send, num
 // is the number of bytes to send in that array.
-int SDCardWrite(struct SDCard* card, int fileNum, void* buf, int num);
+int SDCardWrite(struct SDCardFatFSFile* card, void* buf, int num);
 
 // This tells the SD Card to write whatever contents are currently buffered to
 // the card.  This is only necessary if there is no more data going to be saved
@@ -73,5 +76,9 @@ void SDCardForceWriteBuffer(volatile struct SDCard* card, int fileNum);
 
 // Returns the serial buffer associated with a specific file.
 struct SerialBuffer* SDCardGetBuffer(struct SDCard* card, int fileNum);
+
+// TODO: Move to xmos specific header file.
+// Helper function for sending the currnet buffer (blocking).
+void __SDCardSendBuffer(volatile struct SDCardFatFSFile* card);
 
 #endif

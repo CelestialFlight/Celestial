@@ -126,4 +126,7 @@ void SerialBufferSetSendCharCallback(volatile struct SerialBuffer* buf, void* cb
 // Returns the sendChar callback.
 void* SerialBufferGetSendCharCallback(volatile struct SerialBuffer* buf);
 
+// Tell the process using this serial buffer to force save.
+void SerialBufferForceSend(volatile struct SerialBuffer* buf);
+
 #endif
