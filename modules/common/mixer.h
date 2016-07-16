@@ -17,6 +17,7 @@ struct MotorMixer
     double pitch;
     double roll;
     double yaw;
+    double result;
 };
 
 struct Mixer
@@ -29,6 +30,7 @@ struct Mixer
 };
 
 int MixMotorValues(struct MotorMixer* mix,
-    int throtValue, int rollValue, int pitchValue, int yawValue);
+    int numOfMotors,
+    double throtValue, double rollValue, double pitchValue, double yawValue);
 
 #endif

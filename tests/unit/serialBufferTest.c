@@ -6,7 +6,7 @@
 #include "mflight.h"
 
 // Tests the basic functionality of push/pop/peek/size/etc. functions.
-static void BasicSerialBufferTest(void** state)
+void BasicSerialBufferTest(void** state)
 {
     (void)state; // Unused.
 
@@ -68,7 +68,7 @@ static void callback_char(void) { charCount++; }
 static void callback_forcesend(void) { forceSendCount++; }
 
 // Tests that the callbacks are called correctly.
-static void UseCallbacksSerialBufferTests(void** state)
+void UseCallbacksSerialBufferTests(void** state)
 {
     (void)state; // Unused.
 
@@ -101,16 +101,4 @@ static void UseCallbacksSerialBufferTests(void** state)
     assert_int_equal(printfCount, 1);
     assert_int_equal(charCount, 8);
     assert_int_equal(forceSendCount, 1);
-}
-
-// Execute cmocka unit tests.
-int main()
-{
-    const struct CMUnitTest tests[] =
-    {
-        cmocka_unit_test(BasicSerialBufferTest),
-        cmocka_unit_test(UseCallbacksSerialBufferTests),
-    };
-
-    return cmocka_run_group_tests(tests, NULL, NULL);
 }

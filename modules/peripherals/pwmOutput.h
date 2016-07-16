@@ -17,12 +17,15 @@ struct PWMOutput
 	// Pin information.  This will be platform dependent, so
 	// that datastructure should be defined elsewhere.
 	void* motorData;
+
+	// The frequency to update the PWM.  Typically between 50Hz to 400Hz.
+	uint32_t updateFrequency;
 };
 
 // Initializes the PWM Output structure and hardware.
 // void* data referes to pin information about the PWM ports.
 // That info will be platform dependent.
-void PWMOutputInit(struct PWMOutput* pwm, void* data);
+void PWMOutputInit(struct PWMOutput* pwm, void* data, uint32_t updateFreq);
 
 // Sets the PWM value for a given motor.
 // motor is which motor number to use.`

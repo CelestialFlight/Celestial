@@ -8,10 +8,7 @@ struct RateModeBasic
     struct PIDBasic pitchPID;
     struct PIDBasic rollPID;
     struct PIDBasic yawPID;
-};
 
-struct RateModeResults
-{
     double pitchResult, rollResult, yawResult;
 };
 
@@ -21,7 +18,7 @@ int RateModeBasicInit(
     double rollP, double rollI, double rollD,
     double yawP, double yawI, double yawD);
 
-struct RateModeResults RateModeBasicUpdate(
+void RateModeBasicUpdate(
         struct RateModeBasic* rate,
         double targetPitchForwardRate,
         double targetRollRightRate,

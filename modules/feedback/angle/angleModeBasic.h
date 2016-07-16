@@ -8,10 +8,6 @@ struct AngleModeBasic
     struct PIDBasic pitchPID;
     struct PIDBasic rollPID;
     struct PIDBasic yawPID;
-};
-
-struct AngleModeResults
-{
     double pitchResult, rollResult, yawResult;
 };
 
@@ -21,7 +17,7 @@ int AngleModeBasicInit(
     double rollP, double rollI, double rollD,
     double yawP, double yawI, double yawD);
 
-struct AngleModeResults AngleModeBasicUpdate(
+void AngleModeBasicUpdate(
         struct AngleModeBasic* angle,
         double targetPitchForwardAngle,
         double targetRollRightAngle,

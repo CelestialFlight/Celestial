@@ -2,6 +2,8 @@
 
 void SerialBufferInit(volatile struct SerialBuffer* buf, int bufferSize)
 {
+    if (buf == 0) return; // Defensive check;
+
 	buf->end = 0;
 	buf->start = 0;
 	buf->sendChar = 0;
@@ -11,28 +13,40 @@ void SerialBufferInit(volatile struct SerialBuffer* buf, int bufferSize)
 
 	// Initiate memory for the buffer. Add one extra space which is used for
 	// determining when the buffer is full.
-	buf->bufferSize = (bufferSize+1);
 	buf->buffer = (uint8_t*)malloc(sizeof(uint8_t)*(bufferSize+1));
+	buf->bufferSize = (bufferSize+1);
 }
 
 void SerialBufferDeInit(volatile struct SerialBuffer* buf)
 {
+    if (buf == 0) return; // Defensive check;
+    if (buf->buffer == 0) return;
+
     buf->bufferSize = 0;
     free(buf->buffer);
 }
 
 int SerialBufferIsEmpty(volatile struct SerialBuffer* buf)
 {
+    if (buf == 0) return -1; // Defensive check;
+    if (buf->buffer == 0) return -1;
+
 	return buf->start == buf->end ? 1 : 0;
 }
 
 int SerialBufferIsFull(volatile struct SerialBuffer* buf)
 {
+    if (buf == 0) return -1; // Defensive check;
+    if (buf->buffer == 0) return -1;
+
 	return (buf->end+1) % buf->bufferSize == buf->start ? 1 : 0;
 }
 
 int SerialBufferSize(volatile struct SerialBuffer* buf)
 {
+    if (buf == 0) return -1; // Defensive check;
+    if (buf->buffer == 0) return -1;
+
 	// If the end index hasn't overflowed from max to 0
 	if (buf->end >= buf->start)
 		return buf->end - buf->start;
@@ -44,11 +58,17 @@ int SerialBufferSize(volatile struct SerialBuffer* buf)
 
 int SerialBufferMaxCapacity(volatile struct SerialBuffer* buf)
 {
+    if (buf == 0) return -1; // Defensive check;
+    if (buf->buffer == 0) return -1;
+
     return buf->bufferSize - 1;
 }
 
 int SerialBufferPush(volatile struct SerialBuffer* buf, uint8_t value)
 {
+    if (buf == 0) return -1; // Defensive check;
+    if (buf->buffer == 0) return -1;
+
 	if (SerialBufferIsFull(buf)) return 1;
 
 	// Lock writing to buffer so that there aren't any race issues.
@@ -77,6 +97,9 @@ int SerialBufferPush(volatile struct SerialBuffer* buf, uint8_t value)
 
 int16_t SerialBufferPop(volatile struct SerialBuffer* buf)
 {
+    if (buf == 0) return -1; // Defensive check;
+    if (buf->buffer == 0) return -1;
+
 	if (SerialBufferIsEmpty(buf)) return -1;
 
 	// Lock writing to buffer so that there aren't any race issues.
@@ -94,6 +117,9 @@ int16_t SerialBufferPop(volatile struct SerialBuffer* buf)
 
 int SerialBufferPeek(volatile struct SerialBuffer* buf, uint16_t amount)
 {
+    if (buf == 0) return -1; // Defensive check;
+    if (buf->buffer == 0) return -1;
+
 	if (SerialBufferIsEmpty(buf)) return -1;
 
 	return buf->buffer[(buf->start+amount) % buf->bufferSize];
@@ -101,6 +127,9 @@ int SerialBufferPeek(volatile struct SerialBuffer* buf, uint16_t amount)
 
 int SerialBufferCopy(volatile struct SerialBuffer* buf, char* data, uint16_t amount)
 {
+    if (buf == 0) return -1; // Defensive check;
+    if (buf->buffer == 0) return -1;
+
 	if (amount <= 0) amount = SerialBufferSize(buf);
 
 	int i;
@@ -114,17 +143,25 @@ int SerialBufferCopy(volatile struct SerialBuffer* buf, char* data, uint16_t amo
 
 void SerialBufferReset(volatile struct SerialBuffer* buf)
 {
+    if (buf == 0) return; // Defensive check;
+
 	buf->start = 0;
 	buf->end = 0;
 }
 
 int SerialBufferSaveChar(volatile struct SerialBuffer* buf, char c)
 {
+    if (buf == 0) return -1; // Defensive check;
+    if (buf->buffer == 0) return -1;
+
     return SerialBufferPush(buf, c);
 }
 
 int SerialBufferSaveString(volatile struct SerialBuffer* buf, char* c)
 {
+    if (buf == 0) return -1; // Defensive check;
+    if (buf->buffer == 0) return -1;
+
     while (*c != 0)
     {
         SerialBufferPush(buf, *c);
@@ -136,6 +173,9 @@ int SerialBufferSaveString(volatile struct SerialBuffer* buf, char* c)
 
 int SerialBufferSaveInt(volatile struct SerialBuffer* buf, int n)
 {
+    if (buf == 0) return -1; // Defensive check;
+    if (buf->buffer == 0) return -1;
+
     char value[30];
     int index = 0;
 
@@ -169,6 +209,9 @@ int SerialBufferSaveInt(volatile struct SerialBuffer* buf, int n)
 
 int SerialBufferSaveDouble(volatile struct SerialBuffer* buf, double n)
 {
+    if (buf == 0) return -1; // Defensive check;
+    if (buf->buffer == 0) return -1;
+
     char value[30];
     int index = 0;
 
@@ -218,6 +261,9 @@ int SerialBufferSaveDouble(volatile struct SerialBuffer* buf, double n)
 
 int SerialBufferPrintfVargs(volatile struct SerialBuffer* buf, char* s, va_list ap)
 {
+    if (buf == 0) return -1; // Defensive check;
+    if (buf->buffer == 0) return -1;
+
     while (*s != 0)
     {
        if (*s == '%')
@@ -261,6 +307,8 @@ int SerialBufferPrintfVargs(volatile struct SerialBuffer* buf, char* s, va_list 
 
 void SerialBufferForceSend(volatile struct SerialBuffer* buf)
 {
+    if (buf == 0) return; // Defensive check;
+
     if (buf->forceSend != 0)
     {
         void (*callback)(volatile struct SerialBuffer*) = buf->forceSend;
@@ -270,6 +318,9 @@ void SerialBufferForceSend(volatile struct SerialBuffer* buf)
 
 int SerialBufferPrintf(volatile struct SerialBuffer* buf, char* s, ...)
 {
+    if (buf == 0) return -1; // Defensive check;
+    if (buf->buffer == 0) return -1;
+
     va_list ap;
     va_start(ap, s);
     return SerialBufferPrintfVargs(buf, s, ap);
@@ -278,30 +329,36 @@ int SerialBufferPrintf(volatile struct SerialBuffer* buf, char* s, ...)
 
 void SerialBufferSetPrintfCallback(volatile struct SerialBuffer* buf, void* cb)
 {
+    if (buf == 0) return; // Defensive check;
     buf->sendPrintf = cb;
 }
 
 void* SerialBufferGetPrintfCallback(volatile struct SerialBuffer* buf)
 {
+    if (buf == 0) return 0; // Defensive check;
     return buf->sendPrintf;
 }
 
 void SerialBufferSetForceSendCallback(volatile struct SerialBuffer* buf, void* cb)
 {
+    if (buf == 0) return; // Defensive check;
     buf->forceSend = cb;
 }
 
 void* SerialBufferGetForceSendCallback(volatile struct SerialBuffer* buf)
 {
+    if (buf == 0) return 0; // Defensive check;
     return buf->forceSend;
 }
 
 void SerialBufferSetSendCharCallback(volatile struct SerialBuffer* buf, void* cb)
 {
+    if (buf == 0) return; // Defensive check;
     buf->sendChar = cb;
 }
 
 void* SerialBufferGetSendCharCallback(volatile struct SerialBuffer* buf)
 {
+    if (buf == 0) return 0; // Defensive check;
     return buf->sendChar;
 }

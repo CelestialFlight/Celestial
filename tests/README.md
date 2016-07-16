@@ -8,7 +8,7 @@ In the cmocka-1.01 folder included in mflight (mflight/tests/cmocka_1.01),
 - make
 - sudo make install
 
-You might need to run this:
+You might need to run this if you get an error about shared libaries not being foundS:
 - sudo mv /usr/local/lib/libcmocka* /usr/lib
 
 ### Run Unit Tests  ###

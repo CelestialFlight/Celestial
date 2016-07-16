@@ -13,7 +13,7 @@ int RateModeBasicInit(
     return 0;
 }
 
-struct RateModeResults RateModeBasicUpdate(
+void RateModeBasicUpdate(
     struct RateModeBasic* rate,
     double targetPitchForwardRate,
     double targetRollRightRate,
@@ -29,10 +29,7 @@ struct RateModeResults RateModeBasicUpdate(
     double yawError = targetYawRightRate - yawRightRate;
 
     // PID calculations.
-    struct RateModeResults x;
-    x.pitchResult = PIDBasicUpdate(&rate->pitchPID, pitchError, dT);
-    x.rollResult = PIDBasicUpdate(&rate->rollPID, rollError, dT);
-    x.yawResult = PIDBasicUpdate(&rate->yawPID, yawError, dT);
-
-    return x;
+    rate->pitchResult = PIDBasicUpdate(&rate->pitchPID, pitchError, dT);
+    rate->rollResult = PIDBasicUpdate(&rate->rollPID, rollError, dT);
+    rate->yawResult = PIDBasicUpdate(&rate->yawPID, yawError, dT);
 }

@@ -55,6 +55,9 @@ struct SerialBuffer
 // Initializes the serial buffer to it's default state.
 void SerialBufferInit(volatile struct SerialBuffer* buf, int size);
 
+// De-initializes the serial buffer.
+void SerialBufferDeInit(volatile struct SerialBuffer* buf);
+
 // Returns 1 if the buffer contains no data.
 int SerialBufferIsEmpty(volatile struct SerialBuffer* buf);
 

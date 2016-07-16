@@ -5,12 +5,10 @@
 
 void SetErrorOutput(struct SerialBuffer* output);
 struct SerialBuffer* GetErrorOutput(void);
+int _error(int x, const char* file, const char* function, int line);
 
 #define error(x) \
-    if (x == 0 && GetErrorOutput() != 0) \
-        SerialBufferPrintf( \
-            GetErrorOutput(), "ERROR in %s func:%s line:%d", \
-            __FILE__, __FUNCTION__, __LINE__);
+    _error(x, __FILE__, __FUNCTION__, __LINE__)
 
 #define warning(x) \
     if (x == 0 && GetErrorOutput() != 0){ \

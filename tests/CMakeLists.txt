@@ -1,3 +1,5 @@
+cmake_minimum_required(VERSION 3.0)
+
 # Ensure libcmoka.so (and similar files) are saved to /usr/lib
 
 include_directories(
@@ -7,10 +9,24 @@ include_directories(
     /usr/local/shared
 )
 
-add_executable(serialBufferTest 
-    common/serialBufferTest.c 
-    ../modules/common/serialBuffer.c)
+# All unit tests.
+add_executable(unittests 
+	unit/unittests.c
+	unit/serialBufferTest.c 
+    unit/motorMixerTest.c
+    ../modules/common/serialBuffer.c
+    ../modules/common/mixer.c)
 
-target_link_libraries(serialBufferTest cmocka)
+target_link_libraries(unittests cmocka)
 
-add_test(serialBufferTest ${CMAKE_CURRENT_BINARY_DIR}/simple_test)
+# Manual Single Pole LPF Test
+add_executable(singlePoleLPFTest
+	manual/filters/singlePoleLPFTest.c
+	../modules/filters/recursive/singlePoleLPF.c)
+target_link_libraries(singlePoleLPFTest cmocka m)
+
+# Manual Biquad (2-pole) LPF Test
+add_executable(biquadLPFTest
+	manual/filters/biquadLPFTest.c
+	../modules/filters/recursive/biquadLPF.c)
+target_link_libraries(biquadLPFTest cmocka m)

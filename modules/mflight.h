@@ -12,12 +12,13 @@
 // Filters
 #include "filters/IMU/complementaryFilter.h"
 #include "filters/IMU/kalmanFilterSingleAxis.h"
+#include "filters/recursive/singlePoleLPF.h"
+#include "filters/recursive/biquadLPF.h"
+
+// Peripherals
 #include "peripherals/i2cDevice.h"
 #include "peripherals/pwmOutput.h"
 #include "peripherals/sdcard.h"
-
-// datalogging
-#include "datalogging/dataLogger.h"
 
 // Sensors
 #include "sensors/barometer/MS56xx/MS56xx.h"

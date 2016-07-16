@@ -13,7 +13,7 @@ int AngleModeBasicInit(
     return 0;
 }
 
-struct AngleModeResults AngleModeBasicUpdate(
+void AngleModeBasicUpdate(
         struct AngleModeBasic* angle,
         double targetPitchForwardAngle,
         double targetRollRightAngle,
@@ -29,10 +29,7 @@ struct AngleModeResults AngleModeBasicUpdate(
     double yawError = targetYawRightAngle - yawRightAngle;
 
     // PID calculations.
-    struct AngleModeResults x;
-    x.pitchResult = PIDBasicUpdate(&angle->pitchPID, pitchError, dT);
-    x.rollResult = PIDBasicUpdate(&angle->rollPID, rollError, dT);
-    x.yawResult = PIDBasicUpdate(&angle->yawPID, yawError, dT);
-
-    return x;
+    angle->pitchResult = PIDBasicUpdate(&angle->pitchPID, pitchError, dT);
+    angle->rollResult = PIDBasicUpdate(&angle->rollPID, rollError, dT);
+    angle->yawResult = PIDBasicUpdate(&angle->yawPID, yawError, dT);
 }
