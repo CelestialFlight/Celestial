@@ -69,7 +69,6 @@ int UltraTrackersUpdate(struct UltraTrackers* ut,
             }
             break;
 
-
         // Print captured data to stream if configured.
         case _UT_MODE_PRINT:
 
@@ -87,7 +86,7 @@ int UltraTrackersUpdate(struct UltraTrackers* ut,
                         ut->buffer3[i],
                         ut->buffer4[i]);
 
-                    while (SerialBufferIsEmpty(ut->output) == 0);
+                    while (!SerialBufferIsEmpty(ut->output));
                 }
             }
 
@@ -173,9 +172,9 @@ int UltraTrackersUpdate(struct UltraTrackers* ut,
                 "%d %d %d %d %d %d %f %f\n",
                 time1, time2, time3, pWidth1, pWidth2, pWidth3, newX, newY);*/
 
-            SerialBufferPrintf(ut->output,
+            /*SerialBufferPrintf(ut->output,
                 "%f %f\n",
-                newX, newY);
+                newX, newY);*/
 
             ut->mode = _UT_MODE_WAITING;
             return 1;

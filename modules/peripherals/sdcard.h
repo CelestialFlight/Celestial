@@ -6,22 +6,23 @@
 #include "peripherals/fatfs/ff.h"
 #include <stdint.h>
 
-#define _SD_MAX_FILES 4
-
 struct SDCardFatFSFile
 {
     // SerialBuffer must be the first item in this structure.
     // so that the pointer to the serialBuffer is the same as
-    // the pointer for SDCard.
+    // the pointer for SDCardFatFSFile.
     struct SerialBuffer buf;
 
     // FatFS file
     FIL Fil;
 
-    // A flag for if the serial buffer should be sent.
-    int shouldSendBuffer;
+    // A flag for determining if this file has been opened on the SD Card.
+    uint8_t fileOpened;
 
-    // This should be set to the index of the files[
+    // A flag for if the serial buffer should be sent.
+    uint8_t shouldSendBuffer;
+
+    // This should be set to the index of the files array.
     int fileID;
 
     // Time in usec since last update.
@@ -33,8 +34,11 @@ struct SDCard
     // Fatfs information.
     FATFS Fatfs;
 
-    // Each file that can be opened up at the same time.
-    struct SDCardFatFSFile files[_SD_MAX_FILES];
+    // Stores how many files are being opened/modified on this SD card.
+    int numberOfFiles;
+
+    // Array of files that can be opened.
+    struct SDCardFatFSFile* files;
 
     // Information gathered by the sd card mounting.
     uint32_t totalSpace;
@@ -42,8 +46,7 @@ struct SDCard
 };
 
 // Initializes the SD Card structure.
-int SDCardInit(struct SDCard* card, int bufferSize);
-int SDCardUnlink(struct SDCard* card, const char* fileName);
+int SDCardInit(struct SDCard* card, int numOfFiles, int bufferSize);
 
 // Attempts to mount the SD Card. Returns 0 if succesful, an error
 // message from FatFS otherwise.
@@ -52,8 +55,11 @@ int SDCardMount(struct SDCard* card);
 // Attempts to open a file on the SD Card.  Returns 0 if succesful.
 int SDCardOpen(struct SDCard* card, int fileNum, const char* fileName);
 
+// Deletes a file on the SD card. Returns 0 if succesful.
+int SDCardDelete(struct SDCard* card, const char* fileName);
+
 // Closes file on a SD Card.
-int SDCardClose(struct SDCard* card, int file);
+int SDCardClose(struct SDCardFatFSFile* card);
 
 // Prints data to the currently opened file.
 int SDCardPrintf(struct SDCard* card, int fileNum, char* c, ...);

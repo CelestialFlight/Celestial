@@ -6,6 +6,7 @@
 void SetErrorOutput(struct SerialBuffer* output);
 struct SerialBuffer* GetErrorOutput(void);
 int _error(int x, const char* file, const char* function, int line);
+void _verbose(const char* x, const char* file, const char* function, int line);
 
 #define error(x) \
     _error(x, __FILE__, __FUNCTION__, __LINE__)
@@ -15,5 +16,8 @@ int _error(int x, const char* file, const char* function, int line);
         SerialBufferPrintf( \
             GetErrorOutput(), "WARNING in %s func:%s line:%d", \
             __FILE__, __FUNCTION__, __LINE__); }
+
+#define verbose(str) \
+    _verbose(str, __FILE__, __FUNCTION__, __LINE__)
 
 #endif

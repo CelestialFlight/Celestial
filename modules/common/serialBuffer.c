@@ -1,8 +1,9 @@
 #include "serialBuffer.h"
 
-void SerialBufferInit(volatile struct SerialBuffer* buf, int bufferSize)
+// Returns 0 if succesful. If 1 is returned, the device ran out of memory to allocate.
+int SerialBufferInit(volatile struct SerialBuffer* buf, int bufferSize)
 {
-    if (buf == 0) return; // Defensive check;
+    if (buf == 0) return -1; // Defensive check;
 
 	buf->end = 0;
 	buf->start = 0;
@@ -13,8 +14,13 @@ void SerialBufferInit(volatile struct SerialBuffer* buf, int bufferSize)
 
 	// Initiate memory for the buffer. Add one extra space which is used for
 	// determining when the buffer is full.
-	buf->buffer = (uint8_t*)malloc(sizeof(uint8_t)*(bufferSize+1));
 	buf->bufferSize = (bufferSize+1);
+	buf->buffer = (uint8_t*)malloc(sizeof(uint8_t)*(bufferSize+1));
+
+	// Return an error if malloc ran out of memory.
+	if (buf->buffer == 0) return 1;
+
+	return 0;
 }
 
 void SerialBufferDeInit(volatile struct SerialBuffer* buf)
