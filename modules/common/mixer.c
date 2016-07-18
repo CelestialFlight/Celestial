@@ -1,4 +1,6 @@
+// Mixer maps an array of motors to 4 commands (throt, pitch, roll, yaw).
 #include "mixer.h"
+
 
 int MixMotorValues(struct MotorMixer* mix, int numOfMotors,
     double throtValue, double pitchValue, double rollValue, double yawValue)

@@ -114,7 +114,7 @@ int UltraTrackersUpdate(struct UltraTrackers* ut,
             }
 
             // Adjacent sensors
-            int diff12 = time1 - time2;
+            /*int diff12 = time1 - time2;
             int diff13 = time3 - time1;
 
             // Diagonal sensors
@@ -163,10 +163,10 @@ int UltraTrackersUpdate(struct UltraTrackers* ut,
             double xbottom = (x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4);
 
             double ytop = (x1*y2 - y1*x2) * (y3 - y4) - (y1 - y2) * (x3*y4 - y3*x4);
-            double ybottom = (x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4);
+            double ybottom = (x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4);*/
 
-            double newX = xtop / xbottom;
-            double newY = ytop / ybottom;
+            //double newX = xtop / xbottom;
+            //double newY = ytop / ybottom;
 
             /*SerialBufferPrintf(ut->output,
                 "%d %d %d %d %d %d %f %f\n",

@@ -24,7 +24,8 @@ struct KalmanFilterSingleAxis
 // Q_angle is how noisy the angle approximation is on the accelerometer.
 // Q_gyro is how noisy the gyroscope reading is
 // R_measure is how noisy the measurements are.
-void KalmanFilterSingleAxisInit(
+// Returns 0 if succesful, -1 if null pointer.
+int KalmanFilterSingleAxisInit(
 	struct KalmanFilterSingleAxis* kf,
 	double Q_angle,
 	double Q_gyro,
@@ -33,10 +34,15 @@ void KalmanFilterSingleAxisInit(
 // Updates the kalman filter on a single axis.  Angle is the accelerometer
 // angle, rate is the gyroscope rate, and dT is the time since the last
 // update in seconds.
-void KalmanFilterSingleAxisUpdate(
+// Returns 0 if succesful, -1 if null pointer.
+int KalmanFilterSingleAxisUpdate(
 	struct KalmanFilterSingleAxis* kf,
 	double angle,
 	double rate,
 	double dT);
+
+// Returns the current approximation for a given state.
+double KalmanFilterSingleAxisGetState(
+    struct KalmanFilterSingleAxis* kf, int state);
 
 #endif

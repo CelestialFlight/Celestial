@@ -1,4 +1,6 @@
+// A set of feedback controllers that control the attitude of the quadcopter.
 #include "angleModeBasic.h"
+#include "common/error.h"
 
 int AngleModeBasicInit(
     struct AngleModeBasic* angle,
@@ -6,11 +8,17 @@ int AngleModeBasicInit(
     double rollP, double rollI, double rollD,
     double yawP, double yawI, double yawD)
 {
-    PIDBasicInit(&angle->pitchPID, pitchP, pitchI, pitchD);
-    PIDBasicInit(&angle->rollPID, rollP, rollI, rollD);
-    PIDBasicInit(&angle->yawPID, yawP, yawI, yawD);
+    // Defensive check.
+    if (error(angle != 0)) return -1;
 
-    return 0;
+    // Initialize PID controllers to default values.
+    int result = 0;
+    result |= PIDBasicInit(&angle->pitchPID, pitchP, pitchI, pitchD);
+    result |= PIDBasicInit(&angle->rollPID, rollP, rollI, rollD);
+    result |= PIDBasicInit(&angle->yawPID, yawP, yawI, yawD);
+
+    // Report any errors that may of occured.
+    return error(result == 0);
 }
 
 void AngleModeBasicUpdate(
@@ -23,6 +31,9 @@ void AngleModeBasicUpdate(
         double yawRightAngle,
         double dT)
 {
+    // Defensive check.
+    if (error(angle != 0)) return;
+
     // Calculate errors.
     double pitchError = targetPitchForwardAngle - pitchForwardAngle;
     double rollError = targetRollRightAngle - rollRightAngle;

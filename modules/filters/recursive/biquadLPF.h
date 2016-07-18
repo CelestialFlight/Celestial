@@ -9,7 +9,13 @@ struct BiquadLPF
     double old_output[2];
 };
 
-void BiquadLPFInit(struct BiquadLPF* lpf, double sampleFreq, double cutoffFreq);
+// Initializes the biquad filter.
+// Sample Freq and cutoff Freq is in hertz.
+// Ex. 400 Hz sample freq with a 20 Hz -3db cutoff freq.
+// Returns 0 if succesful, -1 if null pointer.
+int BiquadLPFInit(struct BiquadLPF* lpf, double sampleFreq, double cutoffFreq);
+
+// Takes a sample at the given sampling frequency.
 double BiquadLPFSample(struct BiquadLPF* lpf, double data);
 
 #endif

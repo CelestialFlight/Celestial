@@ -1,37 +1,29 @@
 #include "complementaryFilter.h"
+#include "common/error.h"
 
-void ComplementaryFilterInit(
+int ComplementaryFilterInit(
 	struct ComplementaryFilter* cf, double alpha)
 {
+    // Defensive check.
+    if (error(cf != 0)) return -1;
+
 	cf->angle = 0;
 	cf->alpha = alpha;
+
+	return 0;
 }
 
-// X = pitch, Y = roll, Z = yaw
-void ComplementaryFilterUpdate(
+int ComplementaryFilterUpdate(
     struct ComplementaryFilter* cf,
     double newAngle,
     double rate,
     double dT)
 {
+    // Defensive check.
+    if (error(cf != 0)) return -1;
+
 	cf->angle += rate * dT;
 	cf->angle = cf->angle * cf->alpha + newAngle * (1 - cf->alpha);
 
-	//cf->roll += gyroData->y * dT;
-
-	/*double ax = accelData->x;
-	double ay = accelData->y;
-	double az = accelData->z;
-
-	double pitchAccel =
-		a0tan2(ay, sqrt(ax*ax + az*az)) * 57.2958;
-
-	double rollAccel =
-		atan2(ax, sqrt(ay*ay + az*az)) * 57.2958;
-
-	//printf("IMU %f %f ROLL %f %f %f %f %f\n", cf->roll, cf->pitch, ax, ay, az, rollAccel, pitchAccel);
-*/
-	// Combine gyroscope and accelerometer data.
-	//cf->pitch = cf->pitch * cf->alpha + pitchAccel * (1 - cf->alpha);
-	//cf->roll = cf->roll * cf->alpha + rollAccel * (1 - cf->alpha);
+	return 0;
 }

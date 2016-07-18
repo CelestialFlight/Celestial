@@ -12,16 +12,20 @@ struct UartOutput
     uint32_t baud;
 };
 
-// Initializes uart output.
+// Initializes uart output on hardware.
+// Note: This should only be called during initialization.
+// Note: This is implemented in the hardware-specific bindings.
 void UartOutputInit(struct UartOutput* output, uint32_t baud);
 
 // Cleans up the uart port for use later.
+// Note: This is implemented in the hardware-specific bindings.
 void UartOutputDeinit(struct UartOutput* output);
 
 // Sets the baud rate for the uart output.
 // Note: If the uart port is already running, it
 // is not defined when the baud rate will change.
 // This will be depend on implementation.
+// Note: This is implemented in the hardware-specific bindings.
 void UartOutputSetBaud(struct UartOutput* output, uint32_t baud);
 
 // Sends a string over a UART port.

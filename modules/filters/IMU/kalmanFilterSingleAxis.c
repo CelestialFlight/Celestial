@@ -1,8 +1,12 @@
 #include "kalmanFilterSingleAxis.h"
+#include "common/error.h"
 
-void KalmanFilterSingleAxisInit(
+int KalmanFilterSingleAxisInit(
 	struct KalmanFilterSingleAxis* kf, double Q_angle, double Q_gyro, double R_measure)
 {
+    // Defensive check.
+    if (error(kf != 0)) return 0;
+
 	// Set the initial angle and initial bias to 0.
 	kf->state[0] = 0;
 	kf->state[1] = 0;
@@ -17,11 +21,16 @@ void KalmanFilterSingleAxisInit(
 	kf->Q[0][0] = Q_angle;
 	kf->Q[1][1] = Q_gyro;
 	kf->R[0][0] = R_measure;
+
+	return 0;
 }
 
-void KalmanFilterSingleAxisUpdate(
+int KalmanFilterSingleAxisUpdate(
 	struct KalmanFilterSingleAxis* kf, double angle, double rate, double dT)
 {
+    // Defensive check.
+    if (error(kf != 0)) return -1;
+
 	// Predict
 	kf->state[0] = kf->state[0] + rate * dT - kf->state[1] * dT;
 
@@ -39,6 +48,9 @@ void KalmanFilterSingleAxisUpdate(
 	// Measurement covariance update.
 	double S = kf->P[0][0] + kf->R[0][0];
 
+	// Throw an error if S is somehow zero.
+	if (error(S != 0)) return 1;
+
 	// Calculate Kalman Gain.
 	double kAngle = kf->P[0][0] / S;
 	double kBias = kf->P[1][0] / S;
@@ -55,4 +67,17 @@ void KalmanFilterSingleAxisUpdate(
 	kf->P[0][1] -= kAngle * tmp01;
 	kf->P[1][0] -= kBias * tmp00;
 	kf->P[1][1] -= kBias * tmp01;
+
+	return 0;
 }
+
+double KalmanFilterSingleAxisGetState(
+    struct KalmanFilterSingleAxis* kf, int state)
+{
+    // Defensive Check.
+    if (error(kf != 0)) return 0;
+    if (error(state > 1)) return 0; // State can only be 0 or 1
+
+    return kf->state[state];
+}
+

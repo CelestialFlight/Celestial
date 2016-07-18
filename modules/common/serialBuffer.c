@@ -1,9 +1,13 @@
+//
 #include "serialBuffer.h"
 
-// Returns 0 if succesful. If 1 is returned, the device ran out of memory to allocate.
+// Returns 0 if succesful. If 1 is returned, the device ran out of memory to
+// allocate.
+// Note: This should only be used during initialization stages of the program.
 int SerialBufferInit(volatile struct SerialBuffer* buf, int bufferSize)
 {
-    if (buf == 0) return -1; // Defensive check;
+    // Defensive check.
+    if (buf == 0) return -1;
 
 	buf->end = 0;
 	buf->start = 0;
@@ -23,6 +27,7 @@ int SerialBufferInit(volatile struct SerialBuffer* buf, int bufferSize)
 	return 0;
 }
 
+// Frees up memory that the serial buffer used.
 void SerialBufferDeInit(volatile struct SerialBuffer* buf)
 {
     if (buf == 0) return; // Defensive check;
@@ -48,6 +53,7 @@ int SerialBufferIsFull(volatile struct SerialBuffer* buf)
 	return (buf->end+1) % buf->bufferSize == buf->start ? 1 : 0;
 }
 
+// Returns the amount of buffer space in bytes being used.
 int SerialBufferSize(volatile struct SerialBuffer* buf)
 {
     if (buf == 0) return -1; // Defensive check;
@@ -62,6 +68,7 @@ int SerialBufferSize(volatile struct SerialBuffer* buf)
 		return buf->bufferSize - buf->start + buf->end;
 }
 
+// Returns the maximum capacity in bytes for the buffer.
 int SerialBufferMaxCapacity(volatile struct SerialBuffer* buf)
 {
     if (buf == 0) return -1; // Defensive check;
@@ -70,6 +77,7 @@ int SerialBufferMaxCapacity(volatile struct SerialBuffer* buf)
     return buf->bufferSize - 1;
 }
 
+// Adds a byte to the buffer.
 int SerialBufferPush(volatile struct SerialBuffer* buf, uint8_t value)
 {
     if (buf == 0) return -1; // Defensive check;
@@ -101,6 +109,7 @@ int SerialBufferPush(volatile struct SerialBuffer* buf, uint8_t value)
 	return 0;
 }
 
+// Removes a byte from the buffer.
 int16_t SerialBufferPop(volatile struct SerialBuffer* buf)
 {
     if (buf == 0) return -1; // Defensive check;
@@ -121,6 +130,7 @@ int16_t SerialBufferPop(volatile struct SerialBuffer* buf)
 	return returnResult;
 }
 
+// Looks at, without removing, a byte from the buffer.
 int SerialBufferPeek(volatile struct SerialBuffer* buf, uint16_t amount)
 {
     if (buf == 0) return -1; // Defensive check;
@@ -131,6 +141,7 @@ int SerialBufferPeek(volatile struct SerialBuffer* buf, uint16_t amount)
 	return buf->buffer[(buf->start+amount) % buf->bufferSize];
 }
 
+// Copies `amount` number of bytes from the serial buffer to the `data` array.
 int SerialBufferCopy(volatile struct SerialBuffer* buf, char* data, uint16_t amount)
 {
     if (buf == 0) return -1; // Defensive check;
@@ -147,6 +158,7 @@ int SerialBufferCopy(volatile struct SerialBuffer* buf, char* data, uint16_t amo
 	return 1;
 }
 
+// Resets the buffer without allocating/freeing memory.
 void SerialBufferReset(volatile struct SerialBuffer* buf)
 {
     if (buf == 0) return; // Defensive check;
@@ -311,6 +323,8 @@ int SerialBufferPrintfVargs(volatile struct SerialBuffer* buf, char* s, va_list 
     return 0;
 }
 
+// Tells the peripheral using this serial buffer to try to send all the data
+// on the buffer.
 void SerialBufferForceSend(volatile struct SerialBuffer* buf)
 {
     if (buf == 0) return; // Defensive check;

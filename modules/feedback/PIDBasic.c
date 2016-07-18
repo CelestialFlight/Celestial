@@ -1,8 +1,12 @@
 #include "PIDBasic.h"
+#include "common/error.h"
 
-// Initializes the PID
+// Initializes the controller to default values.
 int PIDBasicInit(struct PIDBasic* pid, double kP, double kI, double kD)
 {
+    // Defensive check.
+    if (error(pid != 0)) return -1;
+
     pid->kP = kP;
     pid->kI = kI;
     pid->kD = kD;
@@ -22,6 +26,9 @@ int PIDBasicInit(struct PIDBasic* pid, double kP, double kI, double kD)
 // Calcultes the feedback value for the PID controller.
 double PIDBasicUpdate(struct PIDBasic* pid, double error, double dT)
 {
+    // Defensive check.
+    if (error(pid != 0)) return 0;
+
     pid->error = error;
     pid->integral += error * dT;
     pid->derivative = (error - pid->previousError) / dT;
@@ -51,4 +58,57 @@ double PIDBasicUpdate(struct PIDBasic* pid, double error, double dT)
     }
 
     return returnValue;
+}
+
+int PIDBasicSetConstants(struct PIDBasic* pid,
+    double kP, double kI, double kD)
+{
+    // Defensive check.
+    if (error(pid != 0)) return 0;
+
+    pid->kP = kP;
+    pid->kI = kI;
+    pid->kD = kD;
+
+    return 0;
+}
+
+int PIDBasicSetMaxIntegral(struct PIDBasic* pid, double maxIntegral)
+{
+    // Defensive check.
+    if (error(pid != 0)) return 0;
+
+    pid->maxIntegral = maxIntegral;
+
+    return 0;
+}
+
+int PIDBasicResetMaxIntegral(struct PIDBasic* pid)
+{
+    // Defensive check.
+    if (error(pid != 0)) return 0;
+
+    pid->maxIntegral = 0;
+
+    return 0;
+}
+
+int PIDBasicSetMaxOutput(struct PIDBasic* pid, double maxOutput)
+{
+    // Defensive check.
+    if (error(pid != 0)) return 0;
+
+    pid->maxOutput = maxOutput;
+
+    return 0;
+}
+
+int PIDBasicResetMaxOutput(struct PIDBasic* pid)
+{
+    // Defensive check.
+    if (error(pid != 0)) return 0;
+
+    pid->maxOutput = 0;
+
+    return 0;
 }

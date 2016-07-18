@@ -13,10 +13,10 @@ struct ComplementaryFilter
 	double alpha;
 };
 
-void ComplementaryFilterInit(
+int ComplementaryFilterInit(
 	struct ComplementaryFilter* cf, double alpha);
 
-void ComplementaryFilterUpdate(
+int ComplementaryFilterUpdate(
 	struct ComplementaryFilter* cf,
 	double angle,
 	double rate,

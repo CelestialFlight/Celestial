@@ -29,8 +29,10 @@ struct Mixer
     struct MotorMixer* motors;
 };
 
-int MixMotorValues(struct MotorMixer* mix,
-    int numOfMotors,
+// `mix` is an array of MotorMixer structs. The array size should be the same
+//   as the number of motors on the drone.
+// `numOfMotors` is the size of the array `mix`.
+int MixMotorValues(struct MotorMixer* mix, int numOfMotors,
     double throtValue, double rollValue, double pitchValue, double yawValue);
 
 #endif

@@ -8,6 +8,8 @@
 
 // Feedback
 #include "feedback/PIDBasic.h"
+#include "feedback/angle/angleModeBasic.h"
+#include "feedback/rate/rateModeBasic.h"
 
 // Filters
 #include "filters/IMU/complementaryFilter.h"

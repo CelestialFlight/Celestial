@@ -14,8 +14,15 @@ add_executable(unittests
 	unit/unittests.c
 	unit/serialBufferTest.c 
     unit/motorMixerTest.c
+    unit/angleModeBasicTest.c
+    unit/pidBasicTest.c
+    unit/errorTest.c
+    ../modules/common/error.c
     ../modules/common/serialBuffer.c
-    ../modules/common/mixer.c)
+    ../modules/common/mixer.c   
+    ../modules/feedback/PIDBasic.c
+    ../modules/feedback/angle/angleModeBasic.c
+    ../modules/feedback/rate/rateModeBasic.c)
 
 target_link_libraries(unittests cmocka)
 

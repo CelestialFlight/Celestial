@@ -1,3 +1,4 @@
+// UART hardware peripheral driver.
 #include "uartOutput.h"
 
 void UartOutputSendString(struct UartOutput* output, char* c)

@@ -24,10 +24,32 @@ struct PIDBasic
 };
 
 // Initalizes the PID controller and constants to default states.
+// Returns 0 if succesful. -1 if NULL pointer.
 int PIDBasicInit(struct PIDBasic* pid, double kP, double kI, double kD);
 
-//.Computes the feedback value for the PID.  dT should be the
+// Computes the feedback value for the PID.  dT should be the
 // amount of time since the last update in seconds.
 double PIDBasicUpdate(struct PIDBasic* pid, double error, double dT);
+
+// Changes the kP, kI, and kD constants.
+// Returns 0 if succesful, -1 if null pointer.
+int PIDBasicSetConstants(struct PIDBasic* pid,
+    double kP, double kI, double kD);
+
+// Sets the maximum integral value to prevent windup.
+// Returns 0 if succesful, -1 if null pointer.
+int PIDBasicSetMaxIntegral(struct PIDBasic* pid, double maxIntegral);
+
+// Resets the maximum integral value to none.
+// Returns 0 if succesful, -1 if null pointer.
+int PIDBasicResetMaxIntegral(struct PIDBasic* pid);
+
+// Sets the maximum output value.
+// Returns 0 if succesful, -1 if null pointer.
+int PIDBasicSetMaxOutput(struct PIDBasic* pid, double maxOutput);
+
+// Resets the maximum output value.
+// Returns 0 if succesful, -1 if null pointer.
+int PIDBasicResetMaxOutput(struct PIDBasic* pid);
 
 #endif

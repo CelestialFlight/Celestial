@@ -40,6 +40,10 @@ struct SerialBuffer
 	//       aren't allowed on xc files.  I don't like this solution.
 	//       FP's are of course allowed in c files, a cast will have
 	//       to be made between void* to void(*)(struct SerialBuffer*)
+	// Another Note: Function pointers are heavily discouraged for
+	//       safety-critical code, so this should be used lightly and
+	//       avoided when possibole.  If a better solution comes up
+	//       that avoids FP's, it should be used.
     void* sendChar;
 
     // Callback function everytime a printf statement is used. This is
@@ -52,7 +56,7 @@ struct SerialBuffer
     void* forceSend;
 };
 
-// Initializes the serial buffer to it's default state.
+// Initializes the serial buffer to it's default state.  Returns 0 if succesful.
 int SerialBufferInit(volatile struct SerialBuffer* buf, int size);
 
 // De-initializes the serial buffer.
