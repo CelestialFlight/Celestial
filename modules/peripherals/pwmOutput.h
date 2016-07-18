@@ -12,14 +12,14 @@ struct PWMOutput
 {
     // Current motor values.  The ranges should be 0 - 1000, unless a
     // specific platform species otherwise.
-	int16_t motors[MAX_MOTORS];
+    int16_t motors[MAX_MOTORS];
 
-	// Pin information.  This will be platform dependent, so
-	// that datastructure should be defined elsewhere.
-	void* motorData;
+    // Pin information.  This will be platform dependent, so
+    // that datastructure should be defined elsewhere.
+    void* motorData;
 
-	// The frequency to update the PWM.  Typically between 50Hz to 400Hz.
-	uint32_t updateFrequency;
+    // The frequency to update the PWM.  Typically between 50Hz to 400Hz.
+    uint32_t updateFrequency;
 };
 
 // Initializes the PWM Output structure and hardware.

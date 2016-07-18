@@ -2,15 +2,15 @@
 #include "common/error.h"
 
 int ComplementaryFilterInit(
-	struct ComplementaryFilter* cf, double alpha)
+    struct ComplementaryFilter* cf, double alpha)
 {
     // Defensive check.
     if (error(cf != 0)) return -1;
 
-	cf->angle = 0;
-	cf->alpha = alpha;
+    cf->angle = 0;
+    cf->alpha = alpha;
 
-	return 0;
+    return 0;
 }
 
 int ComplementaryFilterUpdate(
@@ -22,8 +22,8 @@ int ComplementaryFilterUpdate(
     // Defensive check.
     if (error(cf != 0)) return -1;
 
-	cf->angle += rate * dT;
-	cf->angle = cf->angle * cf->alpha + newAngle * (1 - cf->alpha);
+    cf->angle += rate * dT;
+    cf->angle = cf->angle * cf->alpha + newAngle * (1 - cf->alpha);
 
-	return 0;
+    return 0;
 }

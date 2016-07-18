@@ -6,20 +6,20 @@
 
 struct ComplementaryFilter
 {
-	// Filter outputs in degrees.
-	double angle;
+    // Filter outputs in degrees.
+    double angle;
 
-	// Constant that values the gyroscope over the accelerometer.
-	double alpha;
+    // Constant that values the gyroscope over the accelerometer.
+    double alpha;
 };
 
 int ComplementaryFilterInit(
-	struct ComplementaryFilter* cf, double alpha);
+    struct ComplementaryFilter* cf, double alpha);
 
 int ComplementaryFilterUpdate(
-	struct ComplementaryFilter* cf,
-	double angle,
-	double rate,
-	double dT);
+    struct ComplementaryFilter* cf,
+    double angle,
+    double rate,
+    double dT);
 
 #endif

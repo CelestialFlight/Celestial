@@ -8,13 +8,13 @@
 // Represents a three dimensional object.
 struct Vector3D
 {
-	double x, y, z;
+    double x, y, z;
 };
 
 // Represents a four dimensional object.
 struct Vector4D
 {
-	double w, x, y, z;
+    double w, x, y, z;
 };
 
 double Vector3DGetValue(struct Vector3D* v3d, int axis);

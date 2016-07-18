@@ -9,22 +9,22 @@ int SerialBufferInit(volatile struct SerialBuffer* buf, int bufferSize)
     // Defensive check.
     if (buf == 0) return -1;
 
-	buf->end = 0;
-	buf->start = 0;
-	buf->sendChar = 0;
-	buf->sendPrintf = 0;
-	buf->forceSend = 0;
-	buf->lock = 0;
+    buf->end = 0;
+    buf->start = 0;
+    buf->sendChar = 0;
+    buf->sendPrintf = 0;
+    buf->forceSend = 0;
+    buf->lock = 0;
 
-	// Initiate memory for the buffer. Add one extra space which is used for
-	// determining when the buffer is full.
-	buf->bufferSize = (bufferSize+1);
-	buf->buffer = (uint8_t*)malloc(sizeof(uint8_t)*(bufferSize+1));
+    // Initiate memory for the buffer. Add one extra space which is used for
+    // determining when the buffer is full.
+    buf->bufferSize = (bufferSize+1);
+    buf->buffer = (uint8_t*)malloc(sizeof(uint8_t)*(bufferSize+1));
 
-	// Return an error if malloc ran out of memory.
-	if (buf->buffer == 0) return 1;
+    // Return an error if malloc ran out of memory.
+    if (buf->buffer == 0) return 1;
 
-	return 0;
+    return 0;
 }
 
 // Frees up memory that the serial buffer used.
@@ -42,7 +42,7 @@ int SerialBufferIsEmpty(volatile struct SerialBuffer* buf)
     if (buf == 0) return -1; // Defensive check;
     if (buf->buffer == 0) return -1;
 
-	return buf->start == buf->end ? 1 : 0;
+    return buf->start == buf->end ? 1 : 0;
 }
 
 int SerialBufferIsFull(volatile struct SerialBuffer* buf)
@@ -50,7 +50,7 @@ int SerialBufferIsFull(volatile struct SerialBuffer* buf)
     if (buf == 0) return -1; // Defensive check;
     if (buf->buffer == 0) return -1;
 
-	return (buf->end+1) % buf->bufferSize == buf->start ? 1 : 0;
+    return (buf->end+1) % buf->bufferSize == buf->start ? 1 : 0;
 }
 
 // Returns the amount of buffer space in bytes being used.
@@ -59,13 +59,13 @@ int SerialBufferSize(volatile struct SerialBuffer* buf)
     if (buf == 0) return -1; // Defensive check;
     if (buf->buffer == 0) return -1;
 
-	// If the end index hasn't overflowed from max to 0
-	if (buf->end >= buf->start)
-		return buf->end - buf->start;
+    // If the end index hasn't overflowed from max to 0
+    if (buf->end >= buf->start)
+        return buf->end - buf->start;
 
-	// If the end index is less then the start index
-	else
-		return buf->bufferSize - buf->start + buf->end;
+    // If the end index is less then the start index
+    else
+        return buf->bufferSize - buf->start + buf->end;
 }
 
 // Returns the maximum capacity in bytes for the buffer.
@@ -83,30 +83,30 @@ int SerialBufferPush(volatile struct SerialBuffer* buf, uint8_t value)
     if (buf == 0) return -1; // Defensive check;
     if (buf->buffer == 0) return -1;
 
-	if (SerialBufferIsFull(buf)) return 1;
+    if (SerialBufferIsFull(buf)) return 1;
 
-	// Lock writing to buffer so that there aren't any race issues.
+    // Lock writing to buffer so that there aren't any race issues.
     while (buf->lock == 1);
     buf->lock = 1;
 
-	buf->buffer[buf->end] = value;
-	buf->end++;
+    buf->buffer[buf->end] = value;
+    buf->end++;
 
-	if (buf->end >= buf->bufferSize) buf->end = 0;
+    if (buf->end >= buf->bufferSize) buf->end = 0;
 
-	// Allow other threads to use serial buffer now.
-	// NOTE: A deadlock can occur if the lock is reset after
-	//       sendChar callback as that callback is likely
-	//       to call push/pop and require the lock.
-	buf->lock = 0;
+    // Allow other threads to use serial buffer now.
+    // NOTE: A deadlock can occur if the lock is reset after
+    //       sendChar callback as that callback is likely
+    //       to call push/pop and require the lock.
+    buf->lock = 0;
 
-	if (buf->sendChar != 0)
-	{
-	    void (*callback)(volatile struct SerialBuffer*) = buf->sendChar;
-	    callback(buf);
-	}
+    if (buf->sendChar != 0)
+    {
+        void (*callback)(volatile struct SerialBuffer*) = buf->sendChar;
+        callback(buf);
+    }
 
-	return 0;
+    return 0;
 }
 
 // Removes a byte from the buffer.
@@ -115,19 +115,19 @@ int16_t SerialBufferPop(volatile struct SerialBuffer* buf)
     if (buf == 0) return -1; // Defensive check;
     if (buf->buffer == 0) return -1;
 
-	if (SerialBufferIsEmpty(buf)) return -1;
+    if (SerialBufferIsEmpty(buf)) return -1;
 
-	// Lock writing to buffer so that there aren't any race issues.
-	while (buf->lock == 1);
-	buf->lock = 0;
+    // Lock writing to buffer so that there aren't any race issues.
+    while (buf->lock == 1);
+    buf->lock = 0;
 
-	char returnResult = buf->buffer[buf->start];
-	buf->start++;
+    char returnResult = buf->buffer[buf->start];
+    buf->start++;
 
-	if (buf->start >= buf->bufferSize) buf->start = 0;
+    if (buf->start >= buf->bufferSize) buf->start = 0;
 
-	buf->lock = 0;
-	return returnResult;
+    buf->lock = 0;
+    return returnResult;
 }
 
 // Looks at, without removing, a byte from the buffer.
@@ -136,9 +136,9 @@ int SerialBufferPeek(volatile struct SerialBuffer* buf, uint16_t amount)
     if (buf == 0) return -1; // Defensive check;
     if (buf->buffer == 0) return -1;
 
-	if (SerialBufferIsEmpty(buf)) return -1;
+    if (SerialBufferIsEmpty(buf)) return -1;
 
-	return buf->buffer[(buf->start+amount) % buf->bufferSize];
+    return buf->buffer[(buf->start+amount) % buf->bufferSize];
 }
 
 // Copies `amount` number of bytes from the serial buffer to the `data` array.
@@ -147,15 +147,15 @@ int SerialBufferCopy(volatile struct SerialBuffer* buf, char* data, uint16_t amo
     if (buf == 0) return -1; // Defensive check;
     if (buf->buffer == 0) return -1;
 
-	if (amount <= 0) amount = SerialBufferSize(buf);
+    if (amount <= 0) amount = SerialBufferSize(buf);
 
-	int i;
-	for (i = 0; i < amount; i++)
-	{
-		data[i] = SerialBufferPeek(buf, i);
-	}
+    int i;
+    for (i = 0; i < amount; i++)
+    {
+        data[i] = SerialBufferPeek(buf, i);
+    }
 
-	return 1;
+    return 1;
 }
 
 // Resets the buffer without allocating/freeing memory.
@@ -163,8 +163,8 @@ void SerialBufferReset(volatile struct SerialBuffer* buf)
 {
     if (buf == 0) return; // Defensive check;
 
-	buf->start = 0;
-	buf->end = 0;
+    buf->start = 0;
+    buf->end = 0;
 }
 
 int SerialBufferSaveChar(volatile struct SerialBuffer* buf, char c)

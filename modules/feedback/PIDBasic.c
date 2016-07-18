@@ -37,11 +37,11 @@ double PIDBasicUpdate(struct PIDBasic* pid, double error, double dT)
     // Ensure the integral doesn't get too large.
     if (pid->maxIntegral != 0)
     {
-    	if (pid->integral > pid->maxIntegral)
-    		pid->integral = pid->maxIntegral;
+        if (pid->integral > pid->maxIntegral)
+            pid->integral = pid->maxIntegral;
 
-    	if (pid->integral < -pid->maxIntegral)
-    		pid->integral = -pid->maxIntegral;
+        if (pid->integral < -pid->maxIntegral)
+            pid->integral = -pid->maxIntegral;
     }
 
     double returnValue = pid->error * pid->kP
@@ -50,11 +50,11 @@ double PIDBasicUpdate(struct PIDBasic* pid, double error, double dT)
 
     if (pid->maxOutput != 0)
     {
-    	if (returnValue > pid->maxOutput)
-    		returnValue = pid->maxOutput;
+        if (returnValue > pid->maxOutput)
+            returnValue = pid->maxOutput;
 
-    	if (returnValue < -pid->maxOutput)
-    		returnValue = -pid->maxOutput;
+        if (returnValue < -pid->maxOutput)
+            returnValue = -pid->maxOutput;
     }
 
     return returnValue;

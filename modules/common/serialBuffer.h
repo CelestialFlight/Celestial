@@ -21,29 +21,29 @@
 // being used, and if not, activate it to send the data.
 struct SerialBuffer
 {
-	uint8_t* buffer;
-	uint32_t bufferSize;
+    uint8_t* buffer;
+    uint32_t bufferSize;
 
-	// Points to the start and the end of the circular buffer.
-	uint16_t start;
-	uint16_t end;
+    // Points to the start and the end of the circular buffer.
+    uint16_t start;
+    uint16_t end;
 
-	// A lock used when pushign and pulling from the buffer.  This
-	// ensures that situations where threading is used, there aren't
-	// any race issues.
-	uint8_t lock;
+    // A lock used when pushign and pulling from the buffer.  This
+    // ensures that situations where threading is used, there aren't
+    // any race issues.
+    uint8_t lock;
 
     // Callback function everytime a char is saved.
     // Depending on the implementation, this may be sent
     // to zero and no callback will be made.
-	// Note: This is set as a void pointer type as function pointers
-	//       aren't allowed on xc files.  I don't like this solution.
-	//       FP's are of course allowed in c files, a cast will have
-	//       to be made between void* to void(*)(struct SerialBuffer*)
-	// Another Note: Function pointers are heavily discouraged for
-	//       safety-critical code, so this should be used lightly and
-	//       avoided when possibole.  If a better solution comes up
-	//       that avoids FP's, it should be used.
+    // Note: This is set as a void pointer type as function pointers
+    //       aren't allowed on xc files.  I don't like this solution.
+    //       FP's are of course allowed in c files, a cast will have
+    //       to be made between void* to void(*)(struct SerialBuffer*)
+    // Another Note: Function pointers are heavily discouraged for
+    //       safety-critical code, so this should be used lightly and
+    //       avoided when possibole.  If a better solution comes up
+    //       that avoids FP's, it should be used.
     void* sendChar;
 
     // Callback function everytime a printf statement is used. This is

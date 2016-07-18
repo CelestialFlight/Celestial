@@ -7,16 +7,16 @@
 
 struct Quaternion
 {
-	double x, y, z, w;
+    double x, y, z, w;
 };
 
 void QuaternionFromEuler(
-	struct Quaternion* out, double pitch, double roll, double yaw);
+    struct Quaternion* out, double pitch, double roll, double yaw);
 
 void QuaternionMultiplyByQuaternion(
-	struct Quaternion* A, struct Quaternion* B, struct Quaternion* out);
+    struct Quaternion* A, struct Quaternion* B, struct Quaternion* out);
 
 void QuaternionMultiplyByVector(
-	struct Quaternion* A, struct Vector3D* B, struct Vector3D* out);
+    struct Quaternion* A, struct Vector3D* B, struct Vector3D* out);
 
 #endif

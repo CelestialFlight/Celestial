@@ -9,13 +9,13 @@
 struct MPU6500
 {
     // Accelerometer and gyroscope data from the sensor.
-	struct Vector3D gyroData;
-	struct Vector3D accelData;
+    struct Vector3D gyroData;
+    struct Vector3D accelData;
 
-	// Biases that are subtracted from the sensor data.
-	// By default, these are 0.
-	struct Vector3D gyroBias;
-	struct Vector3D accelBias;
+    // Biases that are subtracted from the sensor data.
+    // By default, these are 0.
+    struct Vector3D gyroBias;
+    struct Vector3D accelBias;
 
     // Highest rotational velocity that be detected.
     // Can be: 250, 500, 1000, 2000 deg/sec.

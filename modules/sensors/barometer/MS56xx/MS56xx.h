@@ -5,9 +5,9 @@
 
 struct MS5611
 {
-	double pressure;
+    double pressure;
 
-	struct I2CDevice i2c;
+    struct I2CDevice i2c;
 };
 
 // Initializes the MS5611 barometer.  
