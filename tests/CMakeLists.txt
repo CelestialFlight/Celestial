@@ -11,8 +11,8 @@ include_directories(
 
 # All unit tests.
 add_executable(unittests 
-	unit/unittests.c
-	unit/serialBufferTest.c 
+    unit/unittests.c
+    unit/serialBufferTest.c 
     unit/motorMixerTest.c
     unit/angleModeBasicTest.c
     unit/pidBasicTest.c
@@ -28,12 +28,12 @@ target_link_libraries(unittests cmocka)
 
 # Manual Single Pole LPF Test
 add_executable(singlePoleLPFTest
-	manual/filters/singlePoleLPFTest.c
-	../modules/filters/recursive/singlePoleLPF.c)
+    manual/filters/singlePoleLPFTest.c
+    ../modules/filters/recursive/singlePoleLPF.c)
 target_link_libraries(singlePoleLPFTest cmocka m)
 
 # Manual Biquad (2-pole) LPF Test
 add_executable(biquadLPFTest
-	manual/filters/biquadLPFTest.c
-	../modules/filters/recursive/biquadLPF.c)
+    manual/filters/biquadLPFTest.c
+    ../modules/filters/recursive/biquadLPF.c)
 target_link_libraries(biquadLPFTest cmocka m)

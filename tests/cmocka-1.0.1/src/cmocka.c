@@ -385,7 +385,7 @@ static void set_source_location(
 
 /* Create function results and expected parameter lists. */
 void initialize_testing(const char *test_name) {
-	(void)test_name;
+    (void)test_name;
     list_initialize(&global_function_result_map_head);
     initialize_source_location(&global_last_mock_value_location);
     list_initialize(&global_function_parameter_map_head);
@@ -395,7 +395,7 @@ void initialize_testing(const char *test_name) {
 
 static void fail_if_leftover_values(const char *test_name) {
     int error_occurred = 0;
-	(void)test_name;
+    (void)test_name;
     remove_always_return_values(&global_function_result_map_head, 1);
     if (check_for_leftover_values(
             &global_function_result_map_head,
@@ -416,7 +416,7 @@ static void fail_if_leftover_values(const char *test_name) {
 
 
 static void teardown_testing(const char *test_name) {
-	(void)test_name;
+    (void)test_name;
     list_free(&global_function_result_map_head, free_symbol_map_value,
               (void*)0);
     initialize_source_location(&global_last_mock_value_location);
@@ -541,7 +541,7 @@ static int list_first(ListNode * const head, ListNode **output) {
 
 /* Deallocate a value referenced by a list. */
 static void free_value(const void *value, void *cleanup_value_data) {
-	(void)cleanup_value_data;
+    (void)cleanup_value_data;
     assert_non_null(value);
     free((void*)value);
 }
@@ -780,7 +780,7 @@ void _will_return(const char * const function_name, const char * const file,
                   const int line, const LargestIntegralType value,
                   const int count) {
     SymbolValue * const return_value =
-	    (SymbolValue*)malloc(sizeof(*return_value));
+        (SymbolValue*)malloc(sizeof(*return_value));
     assert_true(count > 0 || count == -1);
     return_value->value = value;
     set_source_location(&return_value->location, file, line);
@@ -1218,7 +1218,7 @@ static void expect_memory_setup(
         const void * const memory, const size_t size,
         const CheckParameterValue check_function, const int count) {
     CheckMemoryData * const check_data =
-	    (CheckMemoryData*)malloc(sizeof(*check_data) + size);
+        (CheckMemoryData*)malloc(sizeof(*check_data) + size);
     void * const mem = (void*)(check_data + 1);
     declare_initialize_value_pointer_pointer(check_data_pointer, check_data);
     assert_non_null(memory);
@@ -1250,7 +1250,7 @@ static int check_not_memory(const LargestIntegralType value,
     assert_non_null(check);
     return memory_not_equal_display_error(
         cast_largest_integral_type_to_pointer(const char*, value),
-	(const char*)check->memory,
+    (const char*)check->memory,
         check->size);
 }
 
@@ -1268,8 +1268,8 @@ void _expect_not_memory(
 /* CheckParameterValue callback that always returns 1. */
 static int check_any(const LargestIntegralType value,
                      const LargestIntegralType check_value_data) {
-	(void)value;
-	(void)check_value_data;
+    (void)value;
+    (void)check_value_data;
     return 1;
 }
 
@@ -1718,7 +1718,7 @@ static int display_allocated_blocks(const ListNode * const check_point) {
 
     for (node = check_point->next; node != head; node = node->next) {
         const MallocBlockInfo * const block_info =
-		(const MallocBlockInfo*)node->value;
+        (const MallocBlockInfo*)node->value;
         assert_non_null(block_info);
 
         if (!allocated_blocks) {
@@ -2696,7 +2696,7 @@ int _run_tests(const UnitTest * const tests, const size_t number_of_tests) {
      * when a test setup occurs and popped on tear down.
      */
     TestState* test_states =
-	    (TestState*)malloc(number_of_tests * sizeof(*test_states));
+        (TestState*)malloc(number_of_tests * sizeof(*test_states));
     /* The number of test states which should be 0 at the end */
     long number_of_test_states = 0;
     /* Names of the tests that failed. */
