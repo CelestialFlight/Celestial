@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "mflight.h"
+#include "celestial.h"
 
 // Takes in a data file and applys a single pole recursive LPF to it.
 int main()

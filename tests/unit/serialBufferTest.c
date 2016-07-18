@@ -3,7 +3,7 @@
 #include <setjmp.h>
 #include <cmocka.h>
 
-#include "mflight.h"
+#include "celestial.h"
 
 // Tests the basic functionality of push/pop/peek/size/etc. functions.
 void BasicSerialBufferTest(void** state)

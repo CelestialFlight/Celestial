@@ -12,7 +12,7 @@
 #define SB_FULL_BUFFER          1
 #define SB_EMPTY_BUFFER         2
 
-// A SerialBuffer is a core datastructure in mflight which is
+// A SerialBuffer is a core datastructure in celestial which is
 // implemented as a circular buffer.  It is used for saving a stream
 // of data to and from peripherals.  For instance, a datalogger or
 // UART port.  Several callbacks are implemented so that individual

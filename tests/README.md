@@ -1,7 +1,7 @@
 These unit tests use cmocka-1.01 to run. 
 
 ### Install cmocka ###
-In the cmocka-1.01 folder included in mflight (mflight/tests/cmocka_1.01), 
+In the cmocka-1.01 folder included in celestial (celestial/tests/cmocka_1.01), 
 - mkdir build
 - cd build
 - cmake ..
@@ -12,7 +12,7 @@ You might need to run this if you get an error about shared libaries not being f
 - sudo mv /usr/local/lib/libcmocka* /usr/lib
 
 ### Run Unit Tests  ###
-In mflight/tests:
+In celestial/tests:
  - mkdir build
  - cd build
  - cmake ..

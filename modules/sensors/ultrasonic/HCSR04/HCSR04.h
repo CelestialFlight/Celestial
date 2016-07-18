@@ -6,7 +6,7 @@ struct HCSR04
     // Distance in mm.
     double distance;
 
-    // Data depends on the hardware mflight is implemented in.
+    // Data depends on the hardware celestial is implemented in.
     void* pinData;
 };
 

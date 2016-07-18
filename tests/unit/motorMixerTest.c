@@ -3,7 +3,7 @@
 #include <setjmp.h>
 #include <cmocka.h>
 
-#include "mflight.h"
+#include "celestial.h"
 
 void BasicMotorMixerTest(void** state)
 {
